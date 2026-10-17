@@ -237,19 +237,25 @@
         cursor:pointer;background:var(--panel2);border:2px solid transparent;overflow:hidden;
         box-shadow:0 4px 12px rgba(190,90,130,.22);
         transition:transform .12s,box-shadow .12s,filter .12s}
-  .card img{width:100%;height:100%;object-fit:cover;display:block;border-radius:14px}
+  .card > img{width:100%;height:100%;object-fit:cover;display:block;border-radius:14px}
   .card:hover{transform:translateY(-6px) scale(1.03);z-index:5;box-shadow:0 14px 28px rgba(190,90,130,.32)}
   .card.sel{border-color:var(--acento);box-shadow:0 0 22px rgba(255,126,182,.6)}
   .card.can{border-color:var(--bien);box-shadow:0 0 18px rgba(79,176,122,.45)}
-  .card.tap{filter:saturate(.4) brightness(.97);opacity:.85}
-  /* objetivo legal del ataque elegido: la carta rival se enciende en rojo */
-  .card.target{border-color:var(--mal);box-shadow:0 0 20px rgba(255,93,143,.55);animation:tgtpulse 1.4s ease infinite}
+  /* agotada = girada (como los fans): se ve de un vistazo que aún no puede usarse */
+  .card.tap{filter:saturate(.5) brightness(.9);opacity:.92}
+  .card.tap > img{transform:rotate(90deg) scale(.78) translateX(38%)}
+  .card.tap .mgrbadge{opacity:.6}
   @keyframes tgtpulse{50%{box-shadow:0 0 30px rgba(255,93,143,.85)}}
   .side .fame .stack.can{cursor:pointer;box-shadow:0 0 0 3px var(--mal),0 0 22px rgba(255,93,143,.6)}
   .card.mgr{border-color:var(--r-veterana)}
-  .card .mgrbadge{position:absolute;left:4px;bottom:4px;background:var(--panel);border-radius:8px;
-                  font-family:var(--fuente-mono);font-size:10px;padding:2px 6px;
-                  border:1px solid var(--r-veterana);color:var(--tinta2)}
+  /* mánager montado: mini-carta con su arte + su nombre, pegada al borde inferior */
+  .card .mgrbadge{position:absolute;left:4px;right:4px;bottom:4px;display:flex;align-items:center;gap:5px;
+                  background:rgba(20,14,24,.88);border-radius:9px;padding:2px 6px 2px 3px;
+                  border:1px solid var(--r-veterana);cursor:pointer}
+  .card .mgrbadge img{width:22px;height:31px;object-fit:cover;border-radius:4px;display:block;flex:0 0 auto;
+                  border:1px solid var(--r-veterana)}
+  .card .mgrbadge span{font-family:var(--fuente-mono);font-size:10px;line-height:1.1;color:#fff;
+                  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .card .dead{position:absolute;inset:0;background:var(--mal3);border-radius:14px}
   /* ---------- marcas de la tirada en curso ---------- */
   .card.atk-live{border-color:var(--r-elite);box-shadow:0 0 0 3px var(--r-elite),0 0 26px rgba(232,185,49,.8);
@@ -263,6 +269,15 @@
   .liveb.def{background:rgba(255,93,143,.94)}
   .side .fame .stack.fame-live{box-shadow:0 0 0 3px var(--mal),0 0 24px rgba(255,93,143,.7);border-radius:12px;
         animation:tgtpulse 1.4s ease infinite}
+  /* fama ya atacada este turno: queda GIRADA (como una carta agotada) y no
+     recibe más golpes hasta que abra el turno siguiente. */
+  .side .fame .stack.spent .life{filter:saturate(.6) brightness(.94)}
+  .side .fame .stack.spent .life img{transition:transform .18s}
+  .side .fame .stack.spent .life.top img{transform:rotate(90deg) scale(.94)}
+  .side .fame .stack.spent::after{content:'GIRADA';position:absolute;left:50%;top:50%;z-index:5;
+        transform:translate(-50%,-50%) rotate(-10deg);font-family:var(--fuente-mono);font-size:10px;
+        letter-spacing:.16em;color:#fff;background:rgba(91,74,78,.82);border-radius:6px;padding:2px 6px;
+        pointer-events:none}
   .handrow{display:flex;gap:10px;overflow-x:auto;padding:2px;align-items:flex-end;min-height:0;min-width:0;flex:1 1 auto}
   .energyrow{display:flex;gap:0;align-items:center;padding:4px 2px}
   /* FANS: cada punto es una carta boca abajo con el dorso real, solapadas en
@@ -303,8 +318,10 @@
             font-weight:400;color:var(--acento);margin:18px 0 6px}
   .modal p{color:var(--tinta2);margin:6px 0 16px;line-height:1.6}
   .pick{display:flex;gap:12px;flex-wrap:wrap}
+  .pickcell{display:flex;flex-direction:column;align-items:center;gap:6px}
+  .pickcap{font-family:var(--fuente-mono);font-size:10.5px;letter-spacing:.06em;color:var(--tinta2)}
   #zoom{position:fixed;inset:0;background:rgba(4,8,14,.74);display:none;align-items:center;justify-content:center;
-        z-index:80;pointer-events:none}
+        z-index:65;pointer-events:none}
   #zoom img{max-height:92vh;max-width:80vw;border-radius:var(--r);
             box-shadow:0 30px 80px rgba(4,8,14,.5),var(--glow)}
   .hidden{display:none!important}
@@ -574,7 +591,7 @@
 <div class="wrap">
   <header>
     <h1>SUPER<b>POP</b> ♪</h1>
-    <span class="tagpill" id="buildTag">build 20261017-1419</span>
+    <span class="tagpill" id="buildTag">build 20261017-1937</span>
     <span class="sp"></span>
     <button class="gho" id="btnRules">Reglas</button>
     <button class="gho" id="btnMenu">Menú</button>
@@ -624,18 +641,19 @@
       </p>
       <div class="casas" id="casaGrid"></div>
       <div class="box">
-        <div class="mayus" style="font-size:12px;color:var(--dim);letter-spacing:1px;margin-bottom:8px">MODO</div>
-        <div class="row" id="modeRow"></div>
-        <p class="lead" id="setHint" style="margin:12px 0 0;font-size:13.5px">
+        <p class="lead" id="setHint" style="margin:0;font-size:13.5px">
           El set se elige <b>en cada casa</b>: marca una casa y toca los chips <b>01–06</b> que aparecen en su ficha.
         </p>
+        <div class="row" style="margin-top:12px">
+          <button id="btnRandomCasas" title="Dos casas distintas, cada una con un set al azar">🎲 Casas y sets al azar</button>
+        </div>
       </div>
       <div class="box">
         <div class="mayus" style="font-size:12px;color:var(--dim);letter-spacing:1px;margin-bottom:10px">RIVAL</div>
         <div id="rivalBox"></div>
       </div>
       <div class="row">
-        <button class="pri" id="btnStart" disabled>Empezar el concierto</button>
+        <button class="pri" id="btnStart" disabled>Empezar la partida</button>
         <button class="gho" id="btnSetupBack">← Menú</button>
         <span id="setupHint" class="lead" style="margin:0;color:var(--dim)">Elige exactamente 2 casas.</span>
         <span id="setupCtx" class="chip" style="display:none"></span>
@@ -931,9 +949,9 @@ const POWERS_ES = {
 // Reglas de Kiretsu: 5 en mesa, 5 de energía, 5 despliegues por turno, mano de 4 al abrir
 // (el segundo jugador roba 1 más) y 2 energías boca abajo por turno. No hay límite de mano.
 const MAX_BOARD = 5, MAX_ENERGY = 5, MAX_DEPLOYS = 5, MAX_ENERGY_PER_TURN = 2, OPENING_HAND = 4;
+// Una sola mesa: 5 de fama, sin elegir modo (la GIRA de 10 vidas ya no existe).
 const MODES = {
   concierto: { label: 'CONCIERTO', lives: 5, ladder: n => [4, 6, 8, 10, 12][Math.max(0, 5 - n)] },
-  gira:      { label: 'GIRA',      lives: 10, ladder: n => { const k = [4, 4, 6, 6, 8, 8, 10, 10, 12, 12][10 - n]; return { f: k, dice: n <= 5 ? 2 : 1 }; } },
 };
 
 /* ---------- rivales (sacados de IDOLS: board/board.js PERSONAS + board/i18n.js people)
@@ -948,7 +966,7 @@ const RIVALES = [
   { id: "bob", nombre: "Mamamu", cara: "bob", deploy: "cheap", tact: "aggro", remate: "fama", mull: "0",
     desc: "Novatas explosivas: despliegan barato y rematan tu FAMA en cuanto te quedas sin cartas que defiendan.",
     hint: "Mantén alguna carta de dado a mano para tapar sus remates.",
-    jugada: "Despliega barato · ataca a la fama en cuanto puede · defiende sacrificando · mulligan nunca" },
+    jugada: "Despliega barato · ataca primero donde no puedas defender · defiende sacrificando · mulligan nunca" },
   { id: "wences", nombre: "Eipinku", cara: "wences", deploy: "defensive", tact: "control", remate: "orden", mull: "0.5",
     desc: "Muro defensivo: cubre con sus dados altos y solo remata cuando no tienes quien defienda.",
     hint: "Baja cartas que puedan cubrir tus tipos de ataque (su círculo DEFENSA iguala al de tu ATAQUE).",
@@ -960,7 +978,7 @@ const RIVALES = [
   { id: "kai", nombre: "Atisu", cara: "kai", deploy: "cheap", tact: "aggro", remate: "fama", mull: "0.2",
     desc: "Prisa total: despliega lo más barato y pega a la fama sin pensar. Gana rápido o pierde rápido.",
     hint: "Carrera de fama: si no frenas su curva, te adelanta.",
-    jugada: "Despliega barato · ataca a la fama en cuanto puede · defiende sacrificando · mulligan a veces" },
+    jugada: "Despliega barato · ataca primero donde no puedas defender · defiende sacrificando · mulligan a veces" },
   { id: "magnus", nombre: "MonsutaTen", cara: "magnus", deploy: "defensive", tact: "control", remate: "orden", mull: "0.7",
     desc: "Guardián: muro VERSATÍL y AFICIÓN a tope. Gana por desgaste.",
     hint: "Colarle un ataque que no tenga dado de cara que cubrir, o agotar su mazo.",
@@ -988,7 +1006,7 @@ const RIVALES = [
   { id: "vector", nombre: "Hairaito", cara: "vector", deploy: "cheap", tact: "aggro", remate: "fama", mull: "0.4",
     desc: "Curva baratísima y a por la fama sin pensar.",
     hint: "Carrera pura: frena su curva o te adelanta.",
-    jugada: "Despliega barato · ataca a la fama en cuanto puede · defiende sacrificando · mulligan a veces" },
+    jugada: "Despliega barato · ataca primero donde no puedas defender · defiende sacrificando · mulligan a veces" },
   { id: "sorbet", nombre: "GorudenChairudo", cara: "sorbet", deploy: "defensive", tact: "control", remate: "orden", mull: "0.8",
     desc: "Muro y reacciones: cubre con VERSATÍL casi siempre y gana por desgaste.",
     hint: "Cuela golpes por los dados que no tiene, o gana la guerra del mazo.",
@@ -1006,7 +1024,7 @@ const RIVALES = [
     hint: "Casi imposible rematar sus famas; agótale las cartas que defienden.",
     jugada: "Despliega aguantando · ataca en orden de mesa · defiende aguantando · mulligan a veces" },
   { id: "dario", nombre: "PiwonHamonii", cara: "dario", deploy: "random", tact: "equilibrado", remate: "azar", mull: "0.3",
-    desc: "Caos total: despliega al azar y elige objetivos al azar. Imposible de leer.",
+    desc: "Caos total: despliega y ataca en orden imprevisible. Imposible de leer.",
     hint: "No hay plan contra el caos: juega sólido y castiga.",
     jugada: "Despliega al azar · ataca al azar · defiende equilibrado · mulligan a veces" },
   { id: "nova", nombre: "Zerobase", cara: "nova", deploy: "greedy", tact: "equilibrado", remate: "orden", mull: "smart",
@@ -1035,7 +1053,7 @@ const RIVALES = [
     jugada: "Despliega caro · ataca en orden de mesa · defiende equilibrado · mulligan con criterio" },
   { id: "nina", nombre: "KanjaniEito", cara: "nina", deploy: "defensive", tact: "equilibrado", remate: "orden", mull: "0.5",
     desc: "Muro defensivo que solo sale a cazar apoyos.",
-    hint: "No le des objetivos gratis: sus salidas son caras.",
+    hint: "No le dejes huecos: sus salidas son caras.",
     jugada: "Despliega aguantando · ataca en orden de mesa · defiende equilibrado · mulligan a veces" },
   { id: "omar", nombre: "Wesuto", cara: "omar", deploy: "cheap", tact: "aggro", remate: "matar", mull: "0.3",
     desc: "Barato y oportunista: solo remata lo que puede matar.",
@@ -1044,7 +1062,7 @@ const RIVALES = [
   { id: "tessa", nombre: "MomoiroKuroba", cara: "tessa", deploy: "defensive", tact: "aggro", remate: "fama", mull: "0.4",
     desc: "Presión sin parar, ola tras ola.",
     hint: "Te desgasta: cierra la partida antes del turno 6.",
-    jugada: "Despliega aguantando · ataca a la fama en cuanto puede · defiende sacrificando · mulligan a veces" },
+    jugada: "Despliega aguantando · ataca primero donde no puedas defender · defiende sacrificando · mulligan a veces" },
   { id: "ruy", nombre: "Parufamu", cara: "ruy", deploy: "greedy", tact: "control", remate: "orden", mull: "0.5",
     desc: "Pega a lo más duro aunque no lo mate. Letal en fama.",
     hint: "Sus ataques a cartas duelen poco; guarda fama.",
@@ -1060,9 +1078,9 @@ const RIVALES = [
   { id: "vera", nombre: "KinguGnu", cara: "vera", deploy: "greedy", tact: "aggro", remate: "fama", mull: "smart",
     desc: "Despliegue grande y caro, siempre a por famas.",
     hint: "Castiga su curva lenta con presión temprana.",
-    jugada: "Despliega caro · ataca a la fama en cuanto puede · defiende sacrificando · mulligan con criterio" },
+    jugada: "Despliega caro · ataca primero donde no puedas defender · defiende sacrificando · mulligan con criterio" },
   { id: "hugo", nombre: "HigeDan", cara: "hugo", deploy: "defensive", tact: "equilibrado", remate: "orden", mull: "smart",
-    desc: "Cálculo defensivo: despliega y elige objetivo con criterio.",
+    desc: "Cálculo defensivo: despliega y defiende con criterio.",
     hint: "Sólida en todo, brillante en nada: fórzala a improvisar.",
     jugada: "Despliega aguantando · ataca en orden de mesa · defiende equilibrado · mulligan con criterio" },
   { id: "iris", nombre: "Yorushika", cara: "iris", deploy: "cheap", tact: "control", remate: "orden", mull: "0.5",
@@ -1070,7 +1088,7 @@ const RIVALES = [
     hint: "Pequeña pero constante: no la subestimes.",
     jugada: "Despliega barato · ataca en orden de mesa · defiende aguantando · mulligan a veces" },
   { id: "felix", nombre: "SekaiNoOwari", cara: "felix", deploy: "defensive", tact: "equilibrado", remate: "azar", mull: "0.5",
-    desc: "Muro impredecible: objetivos al azar por diseño.",
+    desc: "Muro impredecible: ataca en orden aleatorio por diseño.",
     hint: "Como PiwonHamonii pero con muro: juega sólido.",
     jugada: "Despliega aguantando · ataca al azar · defiende equilibrado · mulligan a veces" },
   { id: "gaia", nombre: "WanOkkuRokku", cara: "gaia", deploy: "cheap", tact: "equilibrado", remate: "orden", mull: "smart",
@@ -1450,7 +1468,7 @@ function rollUnit(u, type, role, reroll1 = false) {
 /* ============================================================================
    ESTADO
    ========================================================================== */
-let G = null, selHand = -1, pendingMgr = null, selAtk = null, busy = false;
+let G = null, selHand = -1, pendingMgr = null, busy = false;
 /* Ggen: cada partida nueva sube el contador; cualquier corrutina (turno de la CPU,
    animación, ataque) que venga de una partida anterior se reconoce y se corta.
    modalResolve: el modal de "abre el turno" cuelga de una promesa; al empezar otra
@@ -1469,7 +1487,7 @@ function mkPlayer(human, spec, name) {
     human, spec: spec.map(s => ({ casa: s.casa, set: s.set })),
     casas: spec.map(s => s.casa), sets: spec.map(s => s.set), name,
     deck: shuffle(deck), hand: [], discard: [], board: [], energy: [], lives: [],
-    fameAttacked: false, pending: false, lost: false,
+    pending: false, lost: false,
   };
   P.lives = P.deck.splice(0, MODES[G.mode].lives);
   P.deploysThisTurn = 0;
@@ -1493,7 +1511,7 @@ function quienJuega(P) {
 function limpiarPartida() {
   Ggen++;                                    // invalida turnos y animaciones en vuelo
   TIRADA = null;
-  busy = false; selHand = -1; selAtk = null; pendingMgr = null;
+  busy = false; selHand = -1; pendingMgr = null;
   specSpeed = 1;
   const host = $('#modalHost'); if (host) host.innerHTML = '';
   diceTrayClose();
@@ -1509,7 +1527,8 @@ function newGame(mode, specP, specO, opts = {}) {
   const rival = spec ? ficha(spec.topId) : rivalActual();
   const bot = spec ? ficha(spec.botId) : null;
   G = { gen: Ggen, mode, turn: 0, ronda: 0, vuelta: 0, phase: 'setup', over: false, registrada: false, winner: null,
-    log: [], rival, rivalBot: bot, spec, pause: false, simFast: !!opts.fast };
+    log: [], rival, rivalBot: bot, spec, pause: false, simFast: !!opts.fast,
+    fameHit: null, pass: false };   // una fama atacada por turno; si no queda a quién pegar, el turno pasa
   G.P = mkPlayer(!spec, specP, spec ? bot.nombre : 'TÚ');
   G.O = mkPlayer(false, specO, rival.nombre);
   // en la simulación masiva cada duelo lleva su propia semilla (con Date.now se
@@ -1589,37 +1608,52 @@ function cardNode(card, opts = {}) {
   const n = el('div', 'card' + (opts.cls ? ' ' + opts.cls : ''));
   const i = el('img'); i.src = img(card.key); i.alt = card.name; i.loading = 'lazy';
   n.appendChild(i);
-  if (opts.mgr) { const b = el('div', 'mgrbadge'); b.textContent = '★ ' + opts.mgr.name.slice(0, 16); n.appendChild(b); }
+  // Mánager montado: su carta no se puede dibujar DETRÁS (el tablero recorta lo que
+  // se sale de la fila), así que va como mini-carta pegada al marco de la Idol, con
+  // su arte y su nombre; al pasar el ratón se amplía el mánager.
+  if (opts.mgr) {
+    const b = el('div', 'mgrbadge');
+    const mi = el('img'); mi.src = img(opts.mgr.key); mi.alt = opts.mgr.name; mi.loading = 'lazy';
+    const ms = el('span'); ms.textContent = '★ ' + opts.mgr.name;
+    b.appendChild(mi); b.appendChild(ms);
+    b.title = 'Mánager montado: ' + opts.mgr.name + ' · pásale el ratón para verlo en grande';
+    b.onmouseenter = () => showZoom(opts.mgr);
+    b.onmouseleave = () => { hideZoom(); if (opts.zoom !== false) showZoom(card); };
+    n.appendChild(b);
+  }
   if (opts.onclick) n.onclick = opts.onclick;
   n.onmouseenter = () => { if (opts.zoom !== false) showZoom(card); };
   n.onmouseleave = hideZoom;
   if (opts.title) n.title = opts.title;
   return n;
 }
-let zoomTimer = 0;
+// La carta en grande sigue al puntero: aparece al posarse (140 ms, para no
+// parpadear al cruzar la mesa) y se retira al salir (80 ms de gracia, para pasar
+// de una carta a la vecina sin que se cierre). Un clic la quita del todo.
+let zoomTimer = 0, zoomOn = false;
 function showZoom(card) {
-  $('#zoomImg').src = img(card.key);
-  $('#zoom').style.display = 'flex';
   clearTimeout(zoomTimer);
-  zoomTimer = setTimeout(hideZoom, 1700); // se retira solo: no bloquea la mesa
+  $('#zoomImg').src = img(card.key);
+  zoomTimer = setTimeout(() => { zoomOn = true; $('#zoom').style.display = 'flex'; }, 140);
 }
-function hideZoom() { clearTimeout(zoomTimer); $('#zoom').style.display = 'none'; }
-document.addEventListener('click', hideZoom, true);
+function hideZoom() {
+  clearTimeout(zoomTimer);
+  if (!zoomOn) { $('#zoom').style.display = 'none'; return; }
+  zoomTimer = setTimeout(() => { zoomOn = false; $('#zoom').style.display = 'none'; }, 80);
+}
+document.addEventListener('click', () => { zoomOn = false; hideZoom(); }, true);
 
 function paintBoard(side, P) {
   const b = $('#' + side + 'Board'); b.innerHTML = '';
-  const atacando = side === 'opp' && G.phase === 'myAttack' && !!selAtk && G.P.human && !busy;
-  const legales = atacando ? legalTargets(P, selAtk.card.atkType) : [];
   for (let i = 0; i < MAX_BOARD; i++) {
     const u = P.board[i];
     if (!u) { const s = el('div', 'slot'); s.textContent = '·'; b.appendChild(s); continue; }
     const clickable = side === 'my' && G.phase === 'myAttack' && !u.tapped && !busy && G.P.human;
-    const objetivo = atacando && legales.includes(u);
     const n = cardNode(u.card, {
-      cls: (u.tapped ? 'tap ' : '') + (clickable ? 'can ' : '') + (objetivo ? 'target ' : '') + (selAtk === u ? 'sel' : ''),
+      cls: (u.tapped ? 'tap ' : '') + (clickable ? 'can ' : ''),
       mgr: u.mgr,
-      onclick: clickable ? () => pickAttacker(u) : objetivo ? () => doMyAttack(selAtk, u) : null,
-      title: u.card.name + (u.mgr ? ' + ' + u.mgr.name : '') + (objetivo ? ' · objetivo' : ''),
+      onclick: clickable ? () => doMyAttack(u) : null,
+      title: u.card.name + (u.mgr ? ' + ' + u.mgr.name : '') + (clickable ? ' · ataca con ' + u.card.atkType : ''),
     });
     // tirada en curso: la que ataca y la que defiende se ven marcadas (y con su etiqueta)
     if (TIRADA) {
@@ -1666,11 +1700,13 @@ function paintFame(side, P) {
   // si la tirada va contra la fama, se marca SOLO la pila del que defiende
   box.classList.toggle('fame-live', !!TIRADA && TIRADA.fame
     && ((TIRADA.fameSide === 'P' && side === 'my') || (TIRADA.fameSide === 'O' && side === 'opp')));
+  // la fama que ya encajó un golpe este turno se ve GIRADA y no admite otro
+  const spent = !!G && G.fameHit === (side === 'my' ? 'P' : 'O');
+  box.classList.toggle('spent', spent && fameLeft(P) > 0);
   const back = SP.imgs.back, alive = fameLeft(P);
-  const total = Math.max(alive, MODES[G.mode].lives || alive);
-  // 5 vidas = tarjetas bien visibles; 10 (GIRA) = pila mas cerrada para no
-  // comerse el campo: el ancho total se queda en ~156 px.
-  const step = total <= 5 ? 28 : Math.max(10, Math.floor((156 - 52) / Math.max(1, total - 1)));
+  const total = Math.max(alive, MODES[G.mode].lives);
+  // 5 de fama fijos: las tarjetas se ven enteras (paso fijo de 28 px).
+  const step = 28;
   let idx = 0;
   // las vidas perdidas quedan primero, en gris: así la pila enseña de un vistazo
   // cuánta fama has gastado (como las vidas de Kiretsu).
@@ -1695,13 +1731,14 @@ function paintFame(side, P) {
     b.title = 'La fama más expuesta defiende tirando ' + dieLbl(P);
     box.appendChild(b);
   }
-  // con un atacante elegido, la fama rival es un objetivo más (1 intento por turno)
-  const puedoFama = side === 'opp' && G.phase === 'myAttack' && !!selAtk && G.P.human && !busy &&
-    fameLeft(P) > 0 && !P.fameAttacked;
-  box.classList.toggle('can', puedoFama);
-  box.onclick = puedoFama ? () => doMyAttack(selAtk, null) : null;
-  if (puedoFama) box.title = 'Atacar la fama: defiende con ' + dieLbl(P) + ' (1 intento por turno)';
-  $('#' + side + 'FameN').textContent = fameLeft(P) + ' de fama';
+  // la fama no se elige como objetivo: recibe el golpe cuando el defensor no
+  // tiene ninguna carta legal con la que parar (ver doAttack)
+  box.classList.remove('can');
+  box.onclick = null;
+  $('#' + side + 'FameN').textContent = fameLeft(P) + ' de fama' + (spent && alive > 0 ? ' · girada' : '');
+  box.title = spent && alive > 0
+    ? 'Fama ya atacada este turno (girada): no recibe más golpes hasta el turno siguiente'
+    : '';
 }
 /** El dado con el que defiende la fama más expuesta, en corto: d4, d8, 2d6… */
 function dieLbl(P) {
@@ -1759,9 +1796,9 @@ function phaseText() {
     : G.winner === 'draw' ? 'EMPATE' : (G.spec ? '¡GANA ' + G.rival.nombre.toUpperCase() + '!' : 'DERROTA');
   if (G.spec) return 'Vuelta ' + Math.max(1, G.vuelta) + ' · juegan las dos CPUs…';
   if (G.phase === 'myDeploy') return 'Despliega (o pasa a ataque).';
-  if (G.phase === 'myAttack') return selAtk
-    ? 'Ataca con ' + selAtk.card.name + ': elige una carta con DEFENSA ' + selAtk.card.atkType + '/VERSÁTIL, o su fama.'
-    : 'Elige una carta preparada para atacar, o cierra el turno.';
+  if (G.phase === 'myAttack') return G.fameHit === 'O'
+    ? 'Clic en una carta preparada: la fama rival ya está girada, así que un ataque sin defensa pierde el golpe y pasa el turno.'
+    : 'Clic en una carta preparada para atacar: el rival elige con qué defiende.';
   if (G.phase === 'ai') return 'Turno del rival…';
   if (G.phase === 'deploy') return 'Turno ' + G.ronda + ' · despliega cartas.';
   if (G.phase === 'attack') return 'Turno ' + G.ronda + ' · ataca.';
@@ -1788,7 +1825,7 @@ function chooseReplacement(P) {
       '(al descarte, con su Manager) para hacer sitio a la nueva.</p>';
     const pick = el('div', 'pick');
     for (const u of P.board) {
-      const n = cardNode(u.card, { mgr: u.mgr, zoom: false });
+      const n = cardNode(u.card, { mgr: u.mgr });   // hover: la carta en grande también aquí
       n.onclick = () => { host.innerHTML = ''; res(u); };
       pick.appendChild(n);
     }
@@ -1885,10 +1922,48 @@ function clickBoardForMgr(u) {
 /* ============================================================================
    COMBATE
    ========================================================================== */
-/** Objetivos legales de un ataque de ese tipo: cartas con DEFENSA del mismo tipo o VERSÁTIL.
-    (El ATACANTE elige a quién pega, como en Kiretsu; el defensor no elige nada.) */
+/** Cartas del defensor con las que puede parar un ataque de ese tipo: DEFENSA del
+    mismo tipo, o VERSÁTIL. Quien elige con cuál para es el DEFENSOR (ver doAttack). */
 const legalTargets = (D, type) => D.board.filter(u => !u.dead && (u.card.defType === type || hasPower(u, 'VERSATIL')));
 const legalBlockers = legalTargets;   // alias: la IA de orden de ataque usa el mismo criterio
+/** Cuánto para una carta de ese tipo: su dado de DEFENSA, o el mejor de su mánager. */
+function defValue(u, type) {
+  let v = parseDie(dieOfType(u.card, type)).faces;
+  if (u.mgr) v = Math.max(v, parseDie(dieOfType(u.mgr, type)).faces);
+  return v;
+}
+/** La CPU defiende según su carácter: aggro sacrifica la más floja; control y
+    equilibrado paran con la mejor que tengan. */
+function aiDefender(D, type, tact) {
+  const cand = legalTargets(D, type);
+  if (!cand.length) return null;
+  const t = tact || ((D === G.O ? G.rival : G.rivalBot) || {}).tact || 'equilibrado';
+  const ord = cand.slice().sort((a, b) => defValue(a, type) - defValue(b, type));
+  return t === 'aggro' ? ord[0] : ord[ord.length - 1];
+}
+/** Te atacan: eliges con qué carta de las legales paras (o le dices a la CPU que elija). */
+function pickDefender(D, type, atkU) {
+  return new Promise(res => {
+    const host = $('#modalHost'), m = el('div', 'modal'), box = el('div', 'card-box');
+    box.innerHTML = '<h3>Te atacan</h3><p><b>' + atkU.card.name + '</b> ataca con <b>' + type + '</b>. ' +
+      'El defensor es quien elige con qué parar: pulsa una de tus cartas. Si no tuvieras ninguna de ese tipo, el golpe iría a tu <b>fama</b> (una vez por turno).</p>';
+    const pick = el('div', 'pick');
+    for (const u of legalTargets(D, type)) {
+      const cell = el('div', 'pickcell');
+      const n = cardNode(u.card, { mgr: u.mgr });
+      n.onclick = () => { host.innerHTML = ''; res(u); };
+      const cap = el('div', 'pickcap'); cap.textContent = 'para con d' + defValue(u, type);
+      cell.appendChild(n); cell.appendChild(cap);
+      pick.appendChild(cell);
+    }
+    box.appendChild(pick);
+    const row = el('div', 'row'); row.style.marginTop = '14px';
+    const auto = el('button'); auto.textContent = 'Que elija lo mejor por mí';
+    auto.onclick = () => { host.innerHTML = ''; res(aiDefender(D, type, 'equilibrado')); };
+    row.appendChild(auto); box.appendChild(row);
+    m.appendChild(box); host.appendChild(m);
+  });
+}
 function auraBonus(P, rollingColor, type, role) {
   let b = 0;
   for (const v of P.board) {
@@ -1903,9 +1978,10 @@ function auraBonus(P, rollingColor, type, role) {
   }
   return b;
 }
-/** Un ataque. `target` = carta del rival, o null para pegar a su fama (a elección
-    del atacante, como en Kiretsu; la fama admite 1 intento por turno). */
-async function doAttack(P, u, target = null) {
+/** Un ataque: el ATACANTE solo declara el tipo. El DEFENSOR decide con qué carta
+    para (la CPU por carácter, tú con una ventana); si no tiene ninguna carta legal
+    con la que defenderse, el golpe va a su fama. */
+async function doAttack(P, u) {
   if (G && G.spec) await specGate();
   if (!G) return;
   const gen = G.gen;
@@ -1915,20 +1991,47 @@ async function doAttack(P, u, target = null) {
   const quick = P !== G.P;
   const pause = ms => sleep(quick ? Math.round(ms * 0.35) : ms);
   u.tapped = true;
-  // marcas en el tablero: ⚔ quien ataca, 🛡 quien defiende (o su fama)
-  TIRADA = { atkU: u, defU: target || null, fame: !target, fameSide: target ? null : (D === G.P ? 'P' : 'O') };
+  // primera marca: solo se sabe quién ataca; el defensor entra cuando elige
+  TIRADA = { atkU: u, defU: null, fame: false, fameSide: null };
   render();
-  banner('Ataca ' + quienJuega(P) + ': ' + u.card.name + ' (' + type + ')' + (target ? ' → ' + target.card.name : ' → fama'), P === G.O && !G.spec);
-  await pause(360);
+  banner('Ataca ' + quienJuega(P) + ': ' + u.card.name + ' (' + type + ')', P === G.O && !G.spec);
+  await pause(320);
   if (!G || G.gen !== gen) return;
+
+  // el defensor elige con qué parar; sin cartas legales, el golpe cae en su fama
+  let def = null;
+  if (legalTargets(D, type).length) {
+    if (D.human && !G.spec) {
+      busy = true; render();
+      def = await pickDefender(D, type, u);
+      busy = false;
+      if (!G || G.gen !== gen) return;
+    } else def = aiDefender(D, type);
+  }
+  const defSide = D === G.P ? 'P' : 'O';
+  const famaLbl = (D === G.P && !G.spec) ? 'tu fama' : 'la fama de ' + quienJuega(D);
+  // UNA fama atacada por turno: si ya encajó un golpe, queda girada y este ataque
+  // sin defensa no tiene a quién pegar, así que el turno pasa (no se encadenan).
+  if (!def && fameLeft(D) > 0 && G.fameHit === defSide) {
+    TIRADA = null; render();
+    logLine('· ' + u.card.name + ' no tiene a quién pegar: ' + famaLbl +
+      ' ya fue atacada este turno (girada) — el turno pasa', P === G.P ? '' : 'bad');
+    banner('La fama ya está girada: pasa el turno', P !== G.P);
+    G.pass = true;
+    await pause(420);
+    return;
+  }
+  if (!def) logLine('· ' + quienJuega(D) + ' no tiene con qué defenderse: el golpe va a su fama');
+  TIRADA = { atkU: u, defU: def, fame: !def, fameSide: def ? null : defSide };
+  render();
 
   // la mesa de tirada abre con LAS DOS cartas ya cargadas (quién ataca y quién
   // defiende, o el dorso de la fama) y solo después empiezan a rodar los dados
   trayDuelOpen();
   trayCard('a', { card: u.card, mgr: u.mgr, title: u.card.name, sub: 'ATACA · ' + type });
-  const fameDie = (!target && !D.fameAttacked && fameLeft(D) > 0) ? famaDieInfo(D) : null;
-  if (target) {
-    trayCard('b', { card: target.card, mgr: target.mgr, title: target.card.name, sub: 'DEFIENDE · ' + type });
+  const fameDie = (!def && fameLeft(D) > 0) ? famaDieInfo(D) : null;
+  if (def) {
+    trayCard('b', { card: def.card, mgr: def.mgr, title: def.card.name, sub: 'DEFIENDE · ' + type });
   } else if (fameDie) {
     trayCard('b', { back: true, title: 'FAMA DE ' + quienJuega(D).toUpperCase(),
       sub: 'DEFIENDE · d' + fameDie.faces + ' · ' + fameLeft(D) + ' de fama' });
@@ -1945,24 +2048,24 @@ async function doAttack(P, u, target = null) {
   await pause(180);
   if (!G || G.gen !== gen) return;
 
-  if (target) {
-    const bR = rollUnit(target, type, 'def');
-    const bExtra = auraBonus(D, colorOf(target), type, 'def');
-    await showRoll(bR, 'def', quienJuega(D) + ' · DEF ' + type, (CASA[colorOf(target)] || {}).color, bExtra, quick, trayPair('b'));
+  if (def) {
+    const bR = rollUnit(def, type, 'def');
+    const bExtra = auraBonus(D, colorOf(def), type, 'def');
+    await showRoll(bR, 'def', quienJuega(D) + ' · DEF ' + type, (CASA[colorOf(def)] || {}).color, bExtra, quick, trayPair('b'));
     if (!G || G.gen !== gen) return;
     bR.kept += bExtra;
     if (a.kept >= bR.kept) {
-      logLine('💥 ' + target.card.name + ' (' + bR.kept + ') cae ante ' + a.kept, D === G.O ? 'good' : 'bad');
-      killUnit(D, target);
+      logLine('💥 ' + def.card.name + ' (' + bR.kept + ') cae ante ' + a.kept, D === G.O ? 'good' : 'bad');
+      killUnit(D, def);
     } else {
-      logLine('🛡 ' + target.card.name + ' resiste (' + bR.kept + ' vs ' + a.kept + ')', D === G.P ? 'good' : '');
+      logLine('🛡 ' + def.card.name + ' resiste (' + bR.kept + ' vs ' + a.kept + ')', D === G.P ? 'good' : '');
     }
   } else {
-    // ataque a la fama: 1 intento por turno, caiga o no
-    if (D.fameAttacked) logLine('→ la fama ya fue atacada este turno: sin efecto');
-    else if (fameLeft(D) === 0) logLine('→ el rival no tenía fama');
+    // sin defensor legal: el golpe va a la fama (y si la tumba, su carta vuelve a su mano)
+    if (fameLeft(D) === 0) logLine('→ ' + quienJuega(D) + ' no tenía fama');
     else {
-      D.fameAttacked = true;
+      G.fameHit = defSide;   // esta fama ya no vuelve a ser atacada en este turno
+      render();
       const { faces, dice } = fameDie || famaDieInfo(D);
       const r = rollDie((dice > 1 ? '2d' : 'd') + faces);
       let guard = 0;
@@ -1992,20 +2095,15 @@ function killUnit(P, u) {
   P.discard.push(u.card);
   if (u.mgr) P.discard.push(u.mgr);
 }
-/** El jugador elige atacante y luego OBJETIVO (una carta legal o la fama rival). */
-function pickAttacker(u) {
-  if (busy || G.phase !== 'myAttack') return;
-  selAtk = selAtk === u ? null : u; selHand = -1;
-  if (selAtk) banner('Elige objetivo: carta legal o su fama');
-  render();
-}
-async function doMyAttack(u, target) {
+/** Atacar es un solo clic: se declara el tipo y el defensor decide con qué para. */
+async function doMyAttack(u) {
   if (busy || G.phase !== 'myAttack' || !u) return;
-  busy = true; selAtk = null;
-  await doAttack(G.P, u, target || null);
+  busy = true; selHand = -1;
+  await doAttack(G.P, u);
   busy = false;
   if (!G || G.over) return;
-  selAtk = null;
+  // sin fama a la que pegar (ya girada), el turno pasa solo
+  if (G.pass) { G.pass = false; render(); await endTurn(); return; }
   render();
 }
 
@@ -2019,7 +2117,7 @@ async function startTurn(P, persona) {
   G.turn++;
   if (P.human) G.ronda++;
   if (G.spec && P === G.O) G.vuelta++;
-  P.fameAttacked = false;
+  G.fameHit = null; G.pass = false;   // al abrir el turno se destapa la fama
   P.deploysThisTurn = 0;
   for (const e of P.energy) e.ready = true;
   for (const u of P.board) u.tapped = false;
@@ -2079,7 +2177,7 @@ function placeEnergy(P) {
     const btn = el('button', 'pri'); btn.textContent = 'Confirmar';
     const refresh = () => { btn.textContent = 'Confirmar (' + chosen.length + '/' + upTo + ')'; };
     for (let i = 0; i < P.hand.length; i++) {
-      const n = cardNode(P.hand[i], { zoom: false });
+      const n = cardNode(P.hand[i]);   // hover: se ve en grande antes de convertirla en fan
       n.onclick = () => {
         const k = chosen.indexOf(i);
         if (k >= 0) { chosen.splice(k, 1); n.classList.remove('sel'); }
@@ -2156,25 +2254,6 @@ function endGame(winnerP, why) {
 /* ============================================================================
    IA
    ========================================================================== */
-function aiTarget(att, D, tact = 'equilibrado') {
-  // En Kiretsu es el ATACANTE quien elige objetivo; el defensor no decide nada.
-  // Aquí manda el carácter de la ficha del rival: aggro busca el golpe que
-  // tumbe algo (y si no, la fama), control prefiere quitarse de encima la carta
-  // más dura que pueda superar, y el equilibrado limpia la más blanda.
-  const tipo = att.card.atkType;
-  const legales = legalTargets(D, tipo);
-  const fuerza = u => Math.max(parseDie(dieOfType(u.card, tipo)).faces,
-    u.mgr ? parseDie(dieOfType(u.mgr, tipo)).faces : 0);
-  const suya = parseDie(dieOfType(att.card, tipo)).faces;
-  const puedeFama = !D.fameAttacked && fameLeft(D) > 0;
-  const matables = legales.filter(u => suya >= fuerza(u)).sort((a, b) => fuerza(a) - fuerza(b));
-  if (matables.length) return tact === 'control' ? matables[matables.length - 1] : matables[0];
-  const blanda = legales.slice().sort((a, b) => fuerza(a) - fuerza(b))[0] || null;
-  if (!puedeFama) return blanda;
-  // sin nada que tumbar, la fama: el aggro la juega aunque el dado sea alto
-  if (tact === 'aggro') return null;
-  return suya >= famaDieInfo(D).faces ? null : blanda;
-}
 /** Dado que defiende la fama en esta mesa (escalera §8). */
 function famaDieInfo(D) {
   const lg = MODES[G.mode].ladder(fameLeft(D));
@@ -2202,7 +2281,8 @@ function ordenDeAtaque(P, p = G.rival) {
   const listos = P.board.filter(u => !u.tapped && !u.dead);
   const remate = (p || G.rival) ? (p || G.rival).remate : 'orden';
   if (remate === 'azar') return shuffle(listos);
-  const puedeRematar = !D.fameAttacked && fameLeft(D) > 0;
+  // solo se persigue la fama mientras siga destapada (una vez por turno)
+  const puedeRematar = fameLeft(D) > 0 && G.fameHit !== (D === G.P ? 'P' : 'O');
   const aFama = u => puedeRematar && legalBlockers(D, u.card.atkType).length === 0;
   const ventaja = u => {
     const t = u.card.atkType;
@@ -2253,14 +2333,12 @@ async function cpuTurn(P, persona) {
   render();
   await sleep(500);
   if (!G || G.gen !== gen) return;
-  // ataques: el atacante elige objetivo (carta legal o fama rival)
-  const D = other(P);
-  const tact = (fichaIA || {}).remate === 'fama' ? 'aggro' :
-    (fichaIA || {}).remate === 'matar' ? 'control' : 'equilibrado';
+  // ataques: el orden es suyo; a quién pega lo decide la defensa del rival
   for (const u of ordenDeAtaque(P, fichaIA)) {
     if (!G || G.gen !== gen || G.over || u.dead || u.tapped) break;
-    await doAttack(P, u, aiTarget(u, D, tact));
+    await doAttack(P, u);
     if (!G || G.gen !== gen || G.over) return;
+    if (G.pass) { G.pass = false; break; }   // la fama ya estaba girada: cierra el turno
     await sleep(220);
   }
   // KIRETSU §7.4: al cerrar el turno no se descarta nada; las cartas se quedan
@@ -2349,7 +2427,7 @@ function showMulligan() {
   const m = el('div', 'modal'), box = el('div', 'card-box');
   box.innerHTML = '<h3>Mano inicial</h3><p>¿La conservas o la cambias? (1 mulligan gratis)</p>';
   const pick = el('div', 'pick');
-  for (const c of G.P.hand) pick.appendChild(cardNode(c, { zoom: false }));
+  for (const c of G.P.hand) pick.appendChild(cardNode(c));   // hover: la mano inicial también se amplía
   box.appendChild(pick);
   const row = el('div', 'row'); row.style.marginTop = '14px';
   const keep = el('button', 'pri'); keep.textContent = 'Me la quedo';
@@ -2414,10 +2492,13 @@ function showRules() {
   <p>Mazo de <b>48 unidades</b> (2 casas × 24) + <b>5 de fama</b>. Ganas dejando al rival sin fama.</p>
   <h4>Tu rival</h4>
   <ul><li>Cada rival es una agencia con <b>cara y ficha propia</b>: su retrato, cómo despliega, en qué
-      orden ataca, a quién elige como objetivo y cuándo cambia su mano inicial.
+      orden ataca, con qué defiende y cuándo cambia su mano inicial.
       Antes de empezar puedes cambiarlo con «Otro rival al azar» o elegirlo de la lista.</li>
       <li>La <b>chapa</b> sobre cada pila de fama te recuerda con qué dado defiende la fama más
       expuesta en ese momento, y los <b>dos círculos</b> junto al retrato son las dos agencias de su mazo.</li></ul>
+  <h4>Tu draft</h4>
+  <ul><li>Eliges <b>2 casas</b> (cada una con su set) o pulsas <b>🎲 Casas y sets al azar</b>, que sortea las
+      dos casas y el set de cada una y te deja el mazo listo para empezar.</li></ul>
   <h4>Fans (son cartas de tu mazo)</h4>
   <ul>
     <li>Al abrir el turno <b>robas 2</b> y colocas <b>hasta 2</b> cartas de tu mano <b>boca abajo</b> como fans:
@@ -2425,6 +2506,9 @@ function showRules() {
     <li>Al sortear la iniciativa el que empieza baja <b>1 fan listo</b> y el otro <b>2</b> (el segundo roba 1 carta extra).</li>
     <li><b>Coste</b>: agota tantos fans preparados como indique. <b>Sacrificio</b>: además manda esa cantidad de las ya
         agotadas al descarte.</li>
+    <li>Una carta <b>agotada</b> se ve <b>girada</b> en la mesa; al empezar tu turno se endereza y las que puedes
+        usar se encienden en <b>verde</b>. Pasa el ratón por cualquier carta (campo, mano o ventanas de elegir) para
+        verla en grande.</li>
   </ul>
   <h4>Tipos</h4>
   <ul>
@@ -2434,10 +2518,12 @@ function showRules() {
   </ul>
   <h4>Combate: VOZ ☆ y BAILE ♡</h4>
   <ul>
-    <li>Atacas con el dado de la <b>IZQUIERDA</b> (VOZ o BAILE) y <b>eliges el objetivo</b>: una carta rival con
-        <b>DEFENSA del mismo tipo</b> (o <b>VERSÁTIL</b>), o su <b>fama</b> si te queda el intento del turno.</li>
-    <li>ATAQUE ≥ DEFENSA → la defensora se descarta con su Manager. A la fama: la más expuesta tira su dado y, si la
-        igualas o superas, su carta vuelve a su mano. Máximo <b>1 ataque a la fama por turno</b>.</li>
+    <li>Atacas con el dado de la <b>IZQUIERDA</b> (VOZ o BAILE): solo declaras el tipo. <b>El defensor elige con qué
+        carta para</b> entre las suyas de <b>DEFENSA del mismo tipo</b> (o <b>VERSÁTIL</b>); tú no eliges objetivo.</li>
+    <li>Si el defensor <b>no tiene ninguna carta legal</b>, el golpe va directo a su <b>fama</b>: la más expuesta tira
+        su dado y, si la igualas o superas, su carta vuelve a su mano. <b>Solo una vez por turno</b>: la fama que ya
+        encajó un golpe queda <b>girada</b>, y un ataque sin defensa contra ella no hace daño y <b>pasa el turno</b>.</li>
+    <li>ATAQUE ≥ DEFENSA → la defensora se descarta con su Manager.</li>
     <li>La fama defiende con dado creciente: <b>5→d4 · 4→d6 · 3→d8 · 2→d10 · 1→d12</b>
         (+1 si el defensor tiene <b>AFICIÓN</b> en escena).</li>
   </ul>
@@ -2484,16 +2570,9 @@ function buildSetup() {
     });
     grid.appendChild(n);
   }
-  const mr = $('#modeRow'); mr.innerHTML = '';
-  for (const k of ['concierto', 'gira']) {
-    const b = el('button', G && G.mode === k ? '' : ''); b.textContent = MODES[k].label + (k === 'gira' ? ' (10 de fama)' : ' (5 de fama)');
-    b.dataset.mode = k; b.classList.toggle('pri', k === 'concierto');
-    b.onclick = () => { selectedMode = k; [...mr.children].forEach(x => x.classList.toggle('pri', x.dataset.mode === k)); };
-    mr.appendChild(b);
-  }
   updateSetupHint();
-  // En campeonato y liga el rival y el modo vienen fijados por el cuadro o la
-  // liga: no se eligen aquí, así que se oculta el selector y se dice el duelo.
+  // En campeonato y liga el rival viene fijado por el cuadro o la liga: no se
+  // elige aquí, así que se oculta su caja y se dice el duelo.
   const fijo = SESION && SESION.tipo !== 'amistoso';
   const chip = $('#setupCtx');
   if (chip) {
@@ -2501,18 +2580,24 @@ function buildSetup() {
     const rv = RIVALES.find(r => r.id === SESION.rivalId);
     chip.textContent = fijo ? ((SESION.etiqueta || '') + ' · vs ' + (rv ? rv.nombre : '')).toUpperCase() : '';
   }
-  const mRow = $('#modeRow');
-  if (mRow) {
-    mRow.style.display = fijo ? 'none' : '';
-    if (mRow.previousElementSibling) mRow.previousElementSibling.style.display = fijo ? 'none' : '';
-  }
   const rBox = $('#rivalBox');
   if (rBox && rBox.closest('.box')) rBox.closest('.box').style.display = fijo ? 'none' : '';
   paintRivalBox();
 }
-let selectedCasas = [], selectedMode = 'concierto';
+let selectedCasas = [];
 /** set elegido para cada casa: { haneul: 1, heuk: 4 } */
 const selectedSets = {};
+/** Sortea la pareja de casas (distintas) y el set de cada una. Es el botón del
+    setup: deja el draft puesto y listo para empezar, sin tocar el rival. */
+function sortearCasas() {
+  const slugs = Object.keys(CASA);
+  const i = Math.floor(Math.random() * slugs.length);
+  let j = Math.floor(Math.random() * (slugs.length - 1));
+  if (j >= i) j++;                                  // la segunda casa nunca repite la primera
+  selectedCasas = [slugs[i], slugs[j]];
+  for (const s of selectedCasas) selectedSets[s] = 1 + Math.floor(Math.random() * 6);
+  buildSetup();                                     // repinta el draft (casas, chips y resumen)
+}
 function updateSetupHint() {
   const ok = selectedCasas.length === 2;
   const b = $('#btnStart'); if (b) b.disabled = !ok;
@@ -2565,10 +2650,11 @@ $('#btnStart').onclick = () => {
   if (selectedCasas.length !== 2) return;
   SAVE.prefs = { casas: selectedCasas.slice(),
     sets: Object.fromEntries(selectedCasas.map(c => [c, selectedSets[c] || 1])),
-    set: selectedSets[selectedCasas[0]] || 1, mode: selectedMode, rival: selectedRival };
+    set: selectedSets[selectedCasas[0]] || 1, rival: selectedRival };
   guardar();
   iniciarPartida(SESION);
 };
+$('#btnRandomCasas').onclick = () => sortearCasas();
 $('#btnAttack').onclick = () => toAttack();
 $('#btnEnd').onclick = () => endTurn();
 $('#btnRules').onclick = () => showRules();
@@ -2627,7 +2713,7 @@ function saveNuevo() {
     meta: { casa: {}, par: {}, set: {}, rivalCasa: {} },
     // duelos CPU vs CPU (simulación y espectáculo): no tocan tu récord
     cpu: { n: 0, g: {}, hist: [] },
-    champ: null, liga: null, prefs: { casas: [], set: 1, mode: 'concierto', rival: null } };
+    champ: null, liga: null, prefs: { casas: [], set: 1, rival: null } };
 }
 let SAVE = (() => {
   try {
@@ -2771,10 +2857,9 @@ function iniciarPartida(cfg) {
   while (oppCasas.length < 2) oppCasas.push(selectedCasas[0]);
   // el rival también puede mezclar sets: cada casa suya con uno al azar
   const opp = oppCasas.map(c => ({ casa: c, set: 1 + Math.floor(Math.random() * 6) }));
-  const modo = SESION.tipo === 'amistoso' ? selectedMode : 'concierto';
   const rival = SESION.rivalId ? RIVALES.find(r => r.id === SESION.rivalId) : rivalActual();
   selectedRival = rival.id;
-  newGame(modo, miSpec, opp);
+  newGame('concierto', miSpec, opp);
   go('table');
 }
 
@@ -3172,7 +3257,7 @@ function renderStats() {
   $('#statsHist').innerHTML = SAVE.hist.length ? SAVE.hist.slice(0, 10).map(h =>
     '<div class="partidito"><span>' + (h.win ? '🏆' : '💔') + '</span><span>' + nombreDe(h.rival) + '</span>' +
     '<span style="color:var(--tinta3)">' + (h.casas || []).map(c => CASA[c].code).join('+') + '</span>' +
-    '<span class="r">' + (MODES[h.modo] || { label: h.modo }).label + '</span></div>').join('')
+    '<span class="r">' + MODES.concierto.label + '</span></div>').join('')
     : '<p class="lead">Sin partidas todavía.</p>';
 }
 
@@ -3253,18 +3338,20 @@ function renderColors() {
 const tutPick = f => SP.db.find(c => c.set === 1 && f(c));
 const TUT = [
   { t: 'El objetivo: dejar al rival sin fama',
-    x: 'Cada jugador empieza con <b>5 de fama</b> en CONCIERTO (10 en GIRA). Ganas dejando al rival a cero.',
+    x: 'Cada jugador empieza con <b>5 de fama</b>. Ganas dejando al rival a cero.',
     list: ['La <b>fama</b> es una pila de cartas boca abajo: defiende siempre la más expuesta, con dado que crece 5→d4 · 4→d6 · 3→d8 · 2→d10 · 1→d12.',
       'Si el rival cae a cero <b>no pierde al instante</b>: juega un <b>turno de despedida</b>. Si sigue a cero, eliminado.',
       'Excepción: si le tumbas la última fama <b>teniendo 2 o más</b> de las tuyas, ganas directamente.',
       'No se pierde por mazo: si se vacía, se baraja el descarte y vuelve a ser mazo.'],
     cards: ['IDOL', 'PRODUCER', 'EVENT'] },
   { t: 'Tu mazo: dos casas y una mano de 4',
-    x: 'Eliges <b>exactamente 2 casas</b>, cada una con su set (pueden ser distintos: HANEUL 03 + HEUK 05). De cada casa entran las <b>24 cartas de su set</b> (9 Idol · 6 Manager · 9 Evento): <b>48 unidades</b> y 5 de fama aparte.',
+    x: 'Eliges <b>exactamente 2 casas</b> (o pulsas <b>🎲 Casas y sets al azar</b> y te lo sortea todo), cada una con su set (pueden ser distintos: HANEUL 03 + HEUK 05). De cada casa entran las <b>24 cartas de su set</b> (9 Idol · 6 Manager · 9 Evento): <b>48 unidades</b> y 5 de fama aparte.',
     list: ['El set se elige en la ficha de cada casa: marca la casa y toca sus chips <b>01–06</b>.',
       'Robas <b>4</b> de mano inicial (el segundo jugador acaba con 5). Antes de jugar decides si la conservas o pides <b>mulligan</b>: barajas todo y robas 4 nuevas.',
       'El rival también tiene su mulligan: es parte de su ficha, no del azar.',
-      'En <b>CONCIERTO</b> y <b>GIRA</b> la partida se juega con la misma baraja: cambia solo la fama.'],
+      'Siempre 5 de fama y la misma baraja: no hay modos que elegir.',
+      'Pasa el ratón por cualquier carta (campo, mano o ventanas de elegir) y se ve en grande mientras la señalas.',
+      'Si no quieres elegir a mano, el botón <b>🎲 Casas y sets al azar</b> de la preparación sortea tus dos casas y el set de cada una.'],
     cards: ['IDOL', 'IDOL'] },
   { t: 'Los fans salen de tu propio mazo',
     x: 'No hay cartas de fans: son <b>cartas de tu mazo puestas boca abajo</b>. Por eso cada punto que gastas te quita una unidad del mazo.',
@@ -3275,7 +3362,8 @@ const TUT = [
     cards: [] },
   { t: 'Desplegar: IDOL, MANAGER y EVENTO',
     x: 'Bajas cartas de la mano pagando su coste. Entran <b>giradas</b>: no atacan hasta el turno siguiente (salvo IMPULSO).',
-    list: ['<b>IDOL</b>: la cantante. Admite <b>1 Manager</b> montado; tira los dados de las dos y se queda el mayor.',
+    list: ['En mesa se ven <b>tumbadas</b> (giradas) mientras están agotadas; al empezar tu turno se enderezan, y las que puedes usar se encienden en <b>verde</b>.',
+      '<b>IDOL</b>: la cantante. Admite <b>1 Manager</b> montado; tira los dados de las dos y se queda el mayor.',
       '<b>MANAGER</b>: no baja solo. Elige una Idol tuya sin Manager: la acompaña (y no ocupa hueco en mesa).',
       '<b>EVENTO</b>: suelto y potente, siempre con una Idol en escena. No lleva Manager.',
       'Hasta <b>5 despliegues por turno</b> y <b>5 cartas en escena</b> (Idol + Evento); los Manager no cuentan.',
@@ -3284,13 +3372,14 @@ const TUT = [
   { t: 'Combate: VOZ ☆ y BAILE ♡',
     x: 'Cada carta ataca con el círculo de la <b>izquierda</b> y defiende con el de la <b>derecha</b> (el otro tipo).',
     list: ['Atacas con cada carta <b>preparada</b>, una vez: se gira al atacar.',
-      '<b>Tú eliges objetivo</b>: una carta rival que defienda tu tipo (voz contra voz, baile contra baile) o su fama. El defensor no elige nada.',
+      '<b>El defensor decide</b>: eliges atacar y es él quien escoge, entre sus cartas que defiendan tu tipo, con cuál para. Tú no eliges objetivo.',
       'Una carta <b>VERSÁTIL</b> puede defender cualquier tipo y tira su dado del tipo atacado.',
       'ATAQUE igual o mayor que DEFENSA → la defensora se descarta. Los dados se lanzan en el momento: nunca quedan fijos.'],
     cards: ['IDOL', 'IDOL'] },
   { t: 'El golpe sin defensa va a la fama',
-    x: 'Si el rival no tiene ninguna carta capaz de defender ese tipo, el ataque pega directo a su fama. Solo <b>1 ataque a la fama por turno y jugador</b>.',
-    list: ['La fama tira el dado de su escalera (5→d4 … 1→d12) y <b>+1 si el defensor tiene AFICIÓN en escena</b> (no se acumula).',
+    x: 'Si el rival no tiene ninguna carta capaz de defender ese tipo, el ataque pega directo a su fama. <b>Solo una vez por turno</b>: en cuanto encaja un golpe (gane o pierda la tirada) la fama se gira, y lo que después no pueda defenderse pierde el golpe y pasa el turno.',
+    list: ['Una fama girada se ve tumbada con su chapa «GIRADA»; al abrir el turno siguiente vuelve a estar destapada.',
+      'La fama tira el dado de su escalera (5→d4 … 1→d12) y <b>+1 si el defensor tiene AFICIÓN en escena</b> (no se acumula).',
       'Si la fama pierde, su carta <b>vuelve a la mano de su dueño</b>.',
       'Con el rival a 1 de fama, su defensa es d12: prepárate para rematar con dados altos o FINAL.'],
     cards: ['IDOL'] },
@@ -3303,9 +3392,9 @@ const TUT = [
       'El rival tampoco descarta al cerrar: roba 2 y juega con lo que tiene.',
       'Si el mazo se vacía, se baraja el descarte y vuelve a ser mazo.'],
     cards: [] },
-  { t: 'Modos, ELO y torneos',
+  { t: 'ELO y torneos',
     x: 'Todo lo que juegas se guarda en este navegador: ELO, récord, campeonato y liga.',
-    list: ['<b>CONCIERTO</b>: 5 de fama, la partida clásica. <b>GIRA</b>: 10 de fama y escalera doble, más larga.',
+    list: ['Siempre <b>5 de fama</b> y la escalera clásica d4→d12: no hay modos que elegir.',
       '<b>Campeonato</b>: 16 fichas, octavos a final. Tu duelo se juega; los de CPU van por ELO.',
       '<b>Liga</b>: 4 divisiones de 9, 9 jornadas y ascensos. Empiezas en PROMESA.',
       '<b>Colores</b>, <b>Simulación CPU</b> y <b>Ver duelo CPU vs CPU</b> están en el menú para estudiar el meta sin jugar.'],
@@ -3748,7 +3837,6 @@ function initShell() {
   if (p.casas && p.casas.length === 2) selectedCasas = p.casas.slice();
   if (p.sets) Object.assign(selectedSets, p.sets);
   else if (p.set) selectedCasas.forEach(c => { selectedSets[c] = p.set; });
-  if (p.mode) selectedMode = p.mode;
   if (p.rival) selectedRival = p.rival;
   wireShell();
   buildSetup();
