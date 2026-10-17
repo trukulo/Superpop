@@ -1,0 +1,84 @@
+SUPERPOP ♪ — juego en solitario contra la IA (sin internet, sin instalar nada)
+
+1. Abre game.html con doble clic (Chrome, Edge o Firefox).
+2. Del menú:
+     · Amistoso      → partida suelta: eliges tus DOS casas, el set, el modo y
+                       el rival (36 fichas, puedes cambiarlo o sortear otro).
+     · Campeonato    → 16 (tú + 15 rivales) en octavos, cuartos, semis y final.
+                       Tu partido se juega de verdad; los de la CPU van por ELO.
+     · Liga          → 4 divisiones de 9, 9 jornadas, ascensos y descensos.
+                       Empiezas en PROMESA.
+     · Ver sets      → las 864 cartas, con filtros, buscador y vista previa.
+     · Estadísticas  → tus partidas, tu ELO y la ficha de cada rival.
+     · Colores       → el meta de colores: los miles de duelos de la Simulación
+                       CPU (casas, parejas, sets, casa+set, pareja+set) y tus
+                       propias partidas, con N/V-E-D y % de victorias.
+     · Tutorial      → 9 pasos con cartas reales: objetivo, mazo, fans,
+                       despliegue, combate, poderes, cierre, modos y ELO.
+     · Simulación CPU→ duelos REALES entre las 36 fichas, en modo rápido:
+                       tandas de 6 o de 1.000, con pestañas Ronda / Meta /
+                       Rankings. Mueve el ELO de las CPUs, no el tuyo.
+     · Ver duelo CPU vs CPU → dos fichas juegan una partida REAL delante de ti,
+                       con pausa y velocidad ×1/×2/×4. Tú solo miras.
+3. Reglas completas dentro del juego (botón «Reglas» de la cabecera y último
+   paso del Tutorial).
+
+Tu progreso (ELO, estadísticas, campeonato y liga) se guarda en este navegador;
+«Resetear juego» en el menú lo borra todo.
+
+Mazo: 48 unidades (2 casas × 24) + 5 de fama por jugador · ~5-10 min.
+Cada casa lleva su propio set: en la preparación, marca la casa y elige 01–06
+(puedes jugar HANEUL del set 03 con HEUK del 05). El rival también mezcla sets.
+Fans: son cartas de tu PROPIO mazo, puestas boca abajo (reserva de 5).
+No hay mazo de fans aparte: el coste y el sacrificio se pagan con esos fans.
+VOZ ☆ ataca, BAILE ♡ defiende (o al revés según la carta): defensa tipo contra tipo.
+En campeonato y liga el duelo es siempre CONCIERTO (5 de fama), para comparar.
+
+CARTAS
+El juego usa la composición FULL ART: el arte ocupa toda la carta y el texto va
+encima del dibujo (sin marco ni consola blanca). generate.mjs saca siempre las tres
+composiciones de cada carta (card-NNN.png básica · card-NNN-fa.png full art ·
+card-NNN-foil.png foil con holográfico) y make-web-game.mjs elige cuál se incrusta:
+full art por defecto, o con «--carta=basic» / «--carta=foil» si quieres rehacerlo.
+Reglas, nombres y datos son idénticos: cambia el acabado, no la carta.
+
+Tu mano es intocable: una carta solo sale de ella si la juegas en mesa o la
+conviertes en fan al abrir el turno. RUMOR y ESCÁNDALO vacían la mano DEL RIVAL
+(la que golpean tus cartas), pero contra ti no hacen nada: el registro avisa con
+«tu mano está a salvo» y no pierdes ninguna carta.
+
+El rival tiene cara y ficha propia: su retrato y los dos círculos de sus agencias
+encabezan su lado, y su línea «jugada» dice cómo despliega, en qué orden ataca, cómo
+elige quién recibe los golpes y cuándo cambia su mano inicial.
+La chapa sobre cada pila de fama recuerda con qué dado defiende la fama más expuesta
+(5 → d4, 4 → d6, 3 → d8, 2 → d10, 1 → d12).
+
+DADOS EN 3D
+Los dados son de verdad: al atacar (y al sortear la iniciativa) ruedan sobre la mesa,
+posan la cara que cuenta y dejan el TOTAL debajo del dado; si la carta lleva «+N» o el
+aura suma, el dado se ve y el «+N» sale aparte, con lo que siempre se entiende por qué
+cae lo que cae. El turno espera a que el dado pare. En el duelo CPU vs CPU los dados
+van con la velocidad elegida (×1/×2/×4) y en la Simulación CPU no se pintan (modo
+rápido).
+
+Cada partida empieza de cero: al abrir otra, la mesa, el registro, los dados y
+cualquier turno que quedara en vuelo de la anterior se descartan.
+
+LA MESA (mapa de zonas, igual que Kiretsu)
+Cada lado tiene su propio pozo, en espejo: arriba el rival, abajo tú. En cada lado
+la fila de recursos (fans, retrato con la mano, mazo y descarte) queda en el borde
+exterior y la FAMA con el campo (hasta 5 cartas) junto a la línea central, así que
+las dos batallas se miran. Dentro de la fila de recursos, de izquierda a derecha:
+la pila de FANS con su contador (n/5), el retrato con el abanico de la mano (el
+rival enseña cuántas cartas tiene, nunca cuáles) y las pilas de MAZO y DESCARTE
+(clic en el descarte para verlo). La FAMA va en columna a la izquierda del campo y
+el registro en la derecha.
+
+REGLAS DEL TURNO (las de Kiretsu)
+· Abres robando 2 y colocando hasta 2 cartas de la mano boca abajo como fans
+  (entran agotados; la reserva es 5).
+· Hasta 5 despliegues por turno y 5 cartas en el campo: con el campo lleno, bajar
+  otra te obliga a elegir qué unidad sale (al descarte, con su Manager).
+· Atacas una vez por carta preparada y ELIGES objetivo: una carta que defienda tu
+  tipo o su fama (1 intento a la fama por turno).
+· Cierras el turno tal cual: no se descarta nada y la mano no tiene tope.
