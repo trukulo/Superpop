@@ -320,6 +320,59 @@
   .pick{display:flex;gap:12px;flex-wrap:wrap}
   .pickcell{display:flex;flex-direction:column;align-items:center;gap:6px}
   .pickcap{font-family:var(--fuente-mono);font-size:10.5px;letter-spacing:.06em;color:var(--tinta2)}
+  /* MESA A LA VISTA: mientras eliges qué cartas van boca abajo como fans, las dos
+     mesas (rival y tuya) siguen a la vista aquí dentro, en pequeño; al pasar el
+     ratón por una carta se ve en grande, igual que en el tablero. */
+  .boardpeek{display:flex;flex-direction:column;gap:7px;margin:12px 0 2px;padding:9px 11px;
+        border:1px dashed var(--linea2);border-radius:var(--r-s);background:rgba(255,255,255,.035)}
+  .bprow{display:flex;flex-direction:column;gap:5px}
+  .bptitle{font-family:var(--fuente-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+        color:var(--acento)}
+  .bpcards{display:flex;gap:9px;flex-wrap:wrap;align-items:flex-start;min-height:20px}
+  .bpcell{display:flex;flex-direction:column;align-items:center;gap:3px;width:54px}
+  .boardpeek .card{width:54px;height:76px;border-radius:8px;box-shadow:0 2px 7px rgba(190,90,130,.2)}
+  .boardpeek .card > img{border-radius:8px}
+  .boardpeek .card .mgrbadge{left:2px;right:2px;bottom:2px;padding:1px 2px;gap:2px;border-radius:5px}
+  .boardpeek .card .mgrbadge img{width:13px;height:19px;border-radius:3px}
+  .boardpeek .card .mgrbadge span{display:none}
+  .boardpeek .card.tap > img{transform:rotate(90deg) scale(.74) translateX(15%)}
+  .bpstat{font-family:var(--fuente-mono);font-size:8.5px;color:var(--tinta2);letter-spacing:.02em;
+        white-space:nowrap;text-align:center;line-height:1.25}
+  .bpnone{font-family:var(--fuente-mono);font-size:11px;color:var(--tinta3)}
+  /* ventana de ABRIR EL TURNO: todo centrado (título, texto, las dos mesas y la mano) */
+  .card-box.centrado{text-align:center}
+  .card-box.centrado h3{text-align:center}
+  .card-box.centrado p{text-align:center;margin-left:auto;margin-right:auto;max-width:660px}
+  .card-box.centrado .pick{justify-content:center}
+  .card-box.centrado .row{justify-content:center}
+  .card-box.centrado .bprow{align-items:center}
+  .card-box.centrado .boardpeek .bpcards{justify-content:center}
+  /* ---------- resumen de fin de partida ---------- */
+  .finbox{display:flex;flex-direction:column;gap:14px;margin-top:16px;text-align:left}
+  .fingrid{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+  .fincol{flex:1 1 250px;min-width:230px;background:var(--panel2);border:1px solid var(--linea);
+        border-radius:var(--r-s);padding:10px 12px}
+  .fincol h5{margin:0 0 6px;font-family:var(--fuente-display);font-size:15px;letter-spacing:.05em;color:var(--tinta)}
+  .finrow{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+        font-family:var(--fuente-mono);font-size:12.5px;color:var(--tinta2);
+        padding:2px 0;border-bottom:1px dashed var(--linea)}
+  .finrow:last-child{border-bottom:0}
+  .finrow b{font-family:var(--fuente-display);font-size:14px;color:var(--tinta);white-space:nowrap}
+  .fintop{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+  .fincard{display:flex;flex-direction:column;align-items:center;gap:4px;width:120px}
+  .fincard .medal{font-family:var(--fuente-mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+        color:var(--acento);text-align:center}
+  .fincard .card{width:78px;height:109px;border-radius:9px}
+  .fincard .finnums{font-family:var(--fuente-mono);font-size:10px;color:var(--tinta2);text-align:center;line-height:1.4}
+  .finlista{max-height:240px;overflow:auto;border:1px dashed var(--linea2);border-radius:var(--r-s);padding:4px 8px}
+  .finlista table{width:100%;border-collapse:collapse;font-family:var(--fuente-mono);font-size:11.5px;color:var(--tinta2)}
+  .finlista th{position:sticky;top:0;background:var(--panel);text-align:left;font-weight:400;letter-spacing:.08em;
+        text-transform:uppercase;font-size:9.5px;color:var(--acento);padding:4px 4px}
+  .finlista td{padding:2px 4px;border-top:1px dashed var(--linea)}
+  .finlista td.n{text-align:right;color:var(--tinta)}
+  .finlista tr.mio td:first-child{color:var(--bien)}
+  .finlista .thumb{width:20px;height:28px;border-radius:4px;object-fit:cover;vertical-align:middle;margin-right:5px}
+  .finnote{font-family:var(--fuente-mono);font-size:10.5px;color:var(--tinta3);text-align:center}
   #zoom{position:fixed;inset:0;background:rgba(4,8,14,.74);display:none;align-items:center;justify-content:center;
         z-index:65;pointer-events:none}
   #zoom img{max-height:92vh;max-width:80vw;border-radius:var(--r);
@@ -351,9 +404,31 @@
   .dierow canvas.dim{opacity:.4;filter:grayscale(.7) brightness(.75)}
   .dielbl{font-family:var(--fuente-mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
         color:rgba(255,255,255,.78);white-space:nowrap;margin-top:3px;text-align:center}
-  .dietot{font-family:var(--fuente-display);font-size:27px;font-weight:900;line-height:1.05;
-        color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.65)}
-  .diebonus{font-family:var(--fuente-mono);font-size:11.5px;font-weight:400;color:#ffb3cf;margin-left:3px}
+  /* TOTAL de la tirada: se lee como una cuenta (tiro + bono = total) y el BONO
+     es lo que más salta, porque es lo que explica por qué cae lo que cae. */
+  .dietot{display:flex;align-items:baseline;justify-content:center;gap:7px;margin-top:4px;
+        font-family:var(--fuente-display);line-height:1;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.65);
+        white-space:nowrap}
+  .dietot .dieneto{font-size:23px;font-weight:900;color:rgba(255,255,255,.72)}
+  .dietot .dieplus,.dietot .dieeq{font-size:23px;font-weight:900;color:rgba(255,255,255,.5)}
+  .dietot .diebonus{font-size:36px;font-weight:900;color:#ff8fc0;line-height:.95;
+        text-shadow:0 0 20px rgba(255,126,182,.9),0 2px 7px rgba(0,0,0,.7)}
+  .dietot .diefinal{font-size:44px;font-weight:900;letter-spacing:-.01em}
+  .diewhy{font-family:var(--fuente-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+        color:#ffa6cd;text-align:center;margin-top:1px}
+  /* Idol + Mánager: los dos tiran a la vez; solo cuenta el mayor y se ve cuál */
+  .dieparts{display:flex;align-items:flex-start;gap:6px;justify-content:center}
+  .dieblock{display:flex;flex-direction:column;align-items:center;gap:1px;padding:4px 6px 2px;
+        border-radius:10px;border:1px solid transparent}
+  .dieblock .diewho{font-family:var(--fuente-mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+        color:rgba(255,255,255,.7);max-width:86px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .dieblock .dienum{font-family:var(--fuente-display);font-size:19px;font-weight:900;color:#fff;line-height:1}
+  .dieblock.win{border-color:rgba(232,185,49,.85);background:rgba(232,185,49,.12);
+        box-shadow:0 0 14px rgba(232,185,49,.35)}
+  .dieblock.win .dienum{color:#ffd76a}
+  .dieblock.win::after{content:'CUENTA';font-family:var(--fuente-mono);font-size:8px;letter-spacing:.14em;
+        color:#ffd76a;margin-top:1px}
+  .dieblock.lose{opacity:.42;filter:grayscale(.85) brightness(.85)}
   /* pareja carta+dado: a la izquierda quien ataca, a la derecha quien defiende */
   .dicetray .duelpair{display:flex;align-items:center;gap:10px;flex:0 0 auto}
   /* la defensa se carga ANTES de tirar, así que su dado entra por la izquierda:
@@ -591,7 +666,7 @@
 <div class="wrap">
   <header>
     <h1>SUPER<b>POP</b> ♪</h1>
-    <span class="tagpill" id="buildTag">build 20261017-1937</span>
+    <span class="tagpill" id="buildTag">build 20261018-0118</span>
     <span class="sp"></span>
     <button class="gho" id="btnRules">Reglas</button>
     <button class="gho" id="btnMenu">Menú</button>
@@ -635,9 +710,8 @@
     <div class="panel">
       <h2>Elige tus dos casas (y el set de cada una)</h2>
       <p class="lead">
-        Mazo de <b>48 unidades</b> (24 + 24) y <b>5 de fama</b>. Cada casa trae las <b>24 cartas de su set</b>:
-        puedes combinar sets distintos (HANEUL del 01 + HEUK del 04). El <b>coste</b> y el <b>sacrificio</b> se pagan
-        con <b>fans</b>: no hay cartas de fans, son <b>cartas de tu propio mazo</b> puestas boca abajo.
+        Mazo de <b>48 unidades</b> (24 + 24). Cada casa trae las <b>24 cartas de su set</b>:
+        puedes combinar sets distintos (HANEUL del 01 + HEUK del 04).
       </p>
       <div class="casas" id="casaGrid"></div>
       <div class="box">
@@ -1390,37 +1464,81 @@ function diceTrayClose() {
   t.innerHTML = '';
 }
 /** Enseña una tirada: cada dado rueda y posa su cara, el mayor queda marcado y
-    debajo se lee el total. Espera a que los dados estén quietos. */
-async function showRoll(det, kind, label, tint, extra = 0, quick = false, host = null) {
+    debajo se lee el total. Espera a que los dados estén quietos.
+    Con Mánager montado se tiran LOS DOS dados (Idol y Mánager) en la misma mesa,
+    solo cuenta el mayor y se marca cuál es; el bono (carta, aura, FINAL, AFICIÓN)
+    se enseña aparte y grande, para que se vea por qué cae lo que cae. */
+async function showRoll(det, kind, label, tint, extra = 0, quick = false, host = null, why = []) {
   if (SIM_FAST() || !det) return;
   const tray = host || $('#diceTray');
   if (!tray) return;
   try {
     const col = el('div', 'diecol');
-    const rolls = (det.rolls && det.rolls.length) ? det.rolls.slice()
-      : [Math.max(1, (det.kept || 1) - (det.bonus || 0))];
-    const faces = det.faces || 6;
-    const best = Math.max(...rolls);
-    const wide = rolls.length > 1;
-    const px = wide ? 92 : 124;
     const tn = Array.isArray(tint) ? tint : rgbOf(tint);
-    const row = el('div', 'dierow');
-    const cvs = [];
-    let marked = false;
-    for (const v of rolls) {
-      const cv = dieCanvas3D(faces, v, kind, px, '', tn);
-      if (!cv) continue;
-      if (wide) { if (!marked && v === best) marked = true; else cv.classList.add('dim'); }
-      row.appendChild(cv); cvs.push(cv);
+    const esc = quick ? 0.3 : 1;
+    const parts = (det.parts && det.parts.length > 1) ? det.parts : null;
+    const anims = [];
+    // un dado (o dos si la carta tira 2dX y se queda el mayor)
+    const diceRow = (d, px, off) => {
+      const r = el('div', 'dierow');
+      const rolls = (d.rolls && d.rolls.length) ? d.rolls.slice()
+        : [Math.max(1, (d.kept || 1) - (d.bonus || 0))];
+      const faces = d.faces || 6;
+      const best = Math.max(...rolls);
+      let marked = false;
+      for (const v of rolls) {
+        const cv = dieCanvas3D(faces, v, kind, px, '', tn);
+        if (!cv) continue;
+        if (rolls.length > 1) { if (!marked && v === best) marked = true; else cv.classList.add('dim'); }
+        if (off) cv.classList.add('dim');
+        r.appendChild(cv);
+        anims.push(animateDie3D(cv, faces, v, kind, '', true, tn, esc));
+      }
+      return r;
+    };
+    if (parts) {
+      const box = el('div', 'dieparts');
+      const best = Math.max(...parts.map(p => p.det.kept));
+      for (const p of parts) {
+        const win = p.det.kept === best;
+        const blk = el('div', 'dieblock' + (win ? ' win' : ' lose'));
+        const who = el('div', 'diewho'); who.textContent = p.who || 'IDOL'; blk.appendChild(who);
+        blk.appendChild(diceRow(p.det, 66, !win));
+        const num = el('div', 'dienum'); num.textContent = p.det.kept; blk.appendChild(num);
+        blk.title = (p.name || '') + ' · ' + (p.det.str || '') + ' → ' + p.det.kept + (win ? ' (cuenta)' : ' (no cuenta)');
+        box.appendChild(blk);
+      }
+      col.appendChild(box);
+    } else {
+      col.appendChild(diceRow(det, (det.rolls && det.rolls.length > 1) ? 92 : 124, false));
     }
-    col.appendChild(row);
     const lbl = el('span', 'dielbl'); lbl.textContent = label; col.appendChild(lbl);
-    const bonus = (det.bonus || 0) + extra;
-    const tot = el('div', 'dietot'); tot.textContent = (det.kept || 0) + extra;
-    if (bonus) { const b = el('span', 'diebonus'); b.textContent = '+' + bonus; tot.appendChild(b); }
-    col.appendChild(tot);
+    // la cuenta entera: [caras] + [bono de carta + aura/FINAL] = [total]
+    const rolls = (det.rolls && det.rolls.length) ? det.rolls : [Math.max(1, (det.kept || 1) - (det.bonus || 0))];
+    const raw = Math.max(...rolls);
+    const flat = det.bonus || 0;
+    const add = flat + extra;
+    const total = raw + add;
+    const whys = [...(flat ? ['CARTA +' + flat] : []), ...why];
+    const line = el('div', 'dietot');
+    if (add) {
+      const n0 = el('span', 'dieneto'); n0.textContent = raw;
+      const pl = el('span', 'dieplus'); pl.textContent = '+';
+      const bn = el('span', 'diebonus'); bn.textContent = add;
+      const eq = el('span', 'dieeq'); eq.textContent = '=';
+      const fn = el('span', 'diefinal'); fn.textContent = total;
+      line.appendChild(n0); line.appendChild(pl); line.appendChild(bn); line.appendChild(eq); line.appendChild(fn);
+    } else {
+      const fn = el('span', 'diefinal'); fn.textContent = total; line.appendChild(fn);
+    }
+    col.appendChild(line);
+    if (add && whys.length) {
+      const w = el('div', 'diewhy'); w.textContent = 'BONO · ' + whys.join(' · '); col.appendChild(w);
+    } else if (add) {
+      const w = el('div', 'diewhy'); w.textContent = 'BONO +' + add; col.appendChild(w);
+    }
     tray.appendChild(col);
-    if (cvs.length) await Promise.all(cvs.map((cv, i) => animateDie3D(cv, faces, rolls[i], kind, '', true, tn, quick ? 0.3 : 1)));
+    if (anims.length) await Promise.all(anims);
     else await sleep(600);
   } catch (e) { if (window.console) console.warn('dado', e); }
 }
@@ -1437,6 +1555,47 @@ const colorOf = u => (u.mgr ? u.mgr.casa : u.card.casa);
 /** dado de la carta del tipo pedido: VOZ es su ataque si ataca con VOZ, si no su defensa. */
 const dieOfType = (c, type) => (c.atkType === type ? c.atk : c.def);
 
+/* ============================================================================
+   ESTADÍSTICAS DE LA PARTIDA (para el resumen de fin)
+   Se apuntan al vuelo y solo se leen al terminar: tiradas (rollDie), despliegues
+   (payAndDeploy), fans bajados, golpes (doAttack) y bajas (killUnit). El que
+   apunta el golpe es la carta que tiró el dado que contó (Idol o Mánager).
+   ========================================================================== */
+function estNueva() {
+  const lado = () => ({ plays: 0, fans: 0, gastados: 0, ataques: 0, kills: 0, defs: 0, defW: 0, famas: 0, perdidas: 0 });
+  return { t0: Date.now(), turnos: 0, ataques: 0, derribos: 0, famas: 0, rebarajas: 0, inicia: null,
+    dados: { n: 0, suma: 0, mayor: 0, unos: 0, criticos: 0 },
+    lado: { P: lado(), O: lado() }, cartas: {} };
+}
+const EST = () => (!G ? null : (G.est || (G.est = estNueva())));
+const estLado = P => { const e = EST(); return e ? e.lado[P === G.P ? 'P' : 'O'] : null; };
+function estCarta(card) {
+  const e = EST();
+  if (!e || !card) return null;
+  return e.cartas[card.key] || (e.cartas[card.key] = {
+    key: card.key, name: card.name, casa: card.casa, type: card.type,
+    plays: 0, atk: 0, kills: 0, defs: 0, defW: 0, famas: 0, muertes: 0,
+  });
+}
+/** La carta que de verdad tiró el dado que contó (Idol o Mánager montado). */
+const estTirador = (u, det) => (u && u.mgr && det && det.who === 'MÁNAGER') ? u.mgr : (u ? u.card : null);
+/** Fans bajados boca abajo (mano → fans, RECARGA y los de la salida). */
+function estFans(P, n = 1) {
+  const e = EST();
+  if (e) e.lado[P === G.P ? 'P' : 'O'].fans += n;
+}
+/** Cada cara que sale, apuntada: tiradas, suma, mayor, unos y críticos. */
+function estDado(rolls, faces) {
+  const e = EST();
+  if (!e || !rolls || !rolls.length) return;
+  for (const v of rolls) {
+    e.dados.n++; e.dados.suma += v;
+    if (v > e.dados.mayor) e.dados.mayor = v;
+    if (v === 1) e.dados.unos++;
+    if (v === faces) e.dados.criticos++;
+  }
+}
+
 /* ---------- parseo de dados ---------- */
 function parseDie(str) {
   const m = /^(2)?d(\d+)(?:\+(\d+))?$/.exec(str || 'd4');
@@ -1447,22 +1606,28 @@ function rollDie(str, reroll1 = false) {
   const rolls = [];
   for (let i = 0; i < p.dice; i++) rolls.push(d(p.faces));
   if (reroll1) for (let i = 0; i < rolls.length; i++) if (rolls[i] === 1) rolls[i] = d(p.faces);
+  estDado(rolls, p.faces);   // estadística de fin de partida
   return { kept: Math.max(...rolls) + p.bonus, rolls, faces: p.faces, bonus: p.bonus, str };
 }
-/** tira la unidad (su dado del tipo pedido + el del Manager montado) y se queda el mayor. */
+/** Tira la unidad: su dado del tipo pedido MÁS el del Mánager montado (los dos
+    ruedan de verdad) y se queda el mayor. Devuelve también las dos tiradas en
+    `parts` para que la mesa de dados enseñe cuál cuenta y cuál no. */
 function rollUnit(u, type, role, reroll1 = false) {
-  const a = rollDie(dieOfType(u.card, type), reroll1 && hasPower(u, 'BLOODRUSH') && role === 'atk');
-  let out = a;
-  if (u.mgr) {
-    const b = rollDie(dieOfType(u.mgr, type), reroll1 && powersOf(u.mgr).includes('BLOODRUSH') && role === 'atk');
-    if (b.kept > out.kept) out = b;
-  }
+  const part = (c, who) => ({
+    who, name: c.name,
+    det: rollDie(dieOfType(c, type), !!reroll1 && role === 'atk' &&
+      (who === 'IDOL' ? hasPower(u, 'BLOODRUSH') : powersOf(c).includes('BLOODRUSH'))),
+  });
+  const parts = [part(u.card, 'IDOL')];
+  if (u.mgr) parts.push(part(u.mgr, 'MÁNAGER'));
   if (role === 'def' && reroll1 && unitPowers(u).includes('LAST STAND')) {
-    // BRILLO: repite los 1 de la defensa
+    // BRILLO: repite los 1 de la defensa de la Idol
     const c = rollDie(dieOfType(u.card, type));
-    if (c.kept > out.kept) out = c;
+    if (c.kept > parts[0].det.kept) parts[0].det = c;
   }
-  return out;
+  let win = parts[0];
+  for (const p of parts) if (p.det.kept > win.det.kept) win = p;
+  return { ...win.det, who: win.who, parts };
 }
 
 /* ============================================================================
@@ -1822,7 +1987,12 @@ function chooseReplacement(P) {
   return new Promise(res => {
     const host = $('#modalHost'), m = el('div', 'modal'), box = el('div', 'card-box');
     box.innerHTML = '<h3>Mesa llena</h3><p>Ya tienes <b>' + MAX_BOARD + '</b> unidades: elige la que sale ' +
-      '(al descarte, con su Manager) para hacer sitio a la nueva.</p>';
+      '(al descarte, con su Manager) para hacer sitio a la nueva.<br>' +
+      'Abajo tienes <b>las dos mesas</b> para decidirlo con todo a la vista.</p>';
+    const visto = el('div', 'boardpeek');
+    visto.appendChild(mesaPeek(other(P), 'SU MESA'));
+    visto.appendChild(mesaPeek(P, 'TU MESA'));
+    box.appendChild(visto);
     const pick = el('div', 'pick');
     for (const u of P.board) {
       const n = cardNode(u.card, { mgr: u.mgr });   // hover: la carta en grande también aquí
@@ -1837,6 +2007,10 @@ function chooseReplacement(P) {
   });
 }
 function payAndDeploy(P, c, mgrTarget) {
+  // estadística: qué se ha bajado y cuánto fan se ha movido
+  { const ec = estCarta(c), el = estLado(P);
+    if (ec) ec.plays++;
+    if (el) { el.plays++; el.gastados += c.cost + c.sac; } }
   // coste: agota N energías preparadas; sacrificio: manda las ÚLTIMAS ya agotadas al descarte
   let need = c.cost;
   for (const e of P.energy) { if (need === 0) break; if (e.ready) { e.ready = false; need--; } }
@@ -1883,7 +2057,7 @@ function stealRandom(P) {
 }
 function addEnergyFromDeck(P) {
   if (!P.deck.length) return;
-  const c = P.deck.shift(); P.energy.push({ card: c, ready: false });   // entra agotada
+  const c = P.deck.shift(); P.energy.push({ card: c, ready: false }); estFans(P);   // entra agotada
 }
 async function onHandClick(i) {
   const P = G.P, c = P.hand[i];
@@ -1947,6 +2121,11 @@ function pickDefender(D, type, atkU) {
     const host = $('#modalHost'), m = el('div', 'modal'), box = el('div', 'card-box');
     box.innerHTML = '<h3>Te atacan</h3><p><b>' + atkU.card.name + '</b> ataca con <b>' + type + '</b>. ' +
       'El defensor es quien elige con qué parar: pulsa una de tus cartas. Si no tuvieras ninguna de ese tipo, el golpe iría a tu <b>fama</b> (una vez por turno).</p>';
+    // las dos mesas a la vista mientras eliges quién para el golpe
+    const visto = el('div', 'boardpeek');
+    visto.appendChild(mesaPeek(G.O, 'SU MESA'));
+    visto.appendChild(mesaPeek(D, 'TU MESA'));
+    box.appendChild(visto);
     const pick = el('div', 'pick');
     for (const u of legalTargets(D, type)) {
       const cell = el('div', 'pickcell');
@@ -1964,20 +2143,22 @@ function pickDefender(D, type, atkU) {
     m.appendChild(box); host.appendChild(m);
   });
 }
-function auraBonus(P, rollingColor, type, role) {
-  let b = 0;
+/** Auras que suman a esta tirada, una a una y con su nombre, para poder
+    enseñarlas en la mesa de dados («BONO · CORO +1 · ATREVIDO +1»). */
+function auraDetail(P, rollingColor, type, role) {
+  const out = [];
   for (const v of P.board) {
     const col = colorOf(v);
     if (col !== rollingColor) continue;
     for (const p of unitPowers(v)) {
-      if (p === 'CORO' && type === 'VOZ') b++;
-      else if (p === 'BAILONGO' && type === 'BAILE') b++;
-      else if (p === 'ATREVIDO' && role === 'atk') b++;
-      else if (p === 'PRUDENTE' && role === 'def') b++;
+      const vale = (p === 'CORO' && type === 'VOZ') || (p === 'BAILONGO' && type === 'BAILE') ||
+        (p === 'ATREVIDO' && role === 'atk') || (p === 'PRUDENTE' && role === 'def');
+      if (vale) out.push(POWERS_ES[p] || p);
     }
   }
-  return b;
+  return out;
 }
+const auraBonus = (P, color, type, role) => auraDetail(P, color, type, role).length;
 /** Un ataque: el ATACANTE solo declara el tipo. El DEFENSOR decide con qué carta
     para (la CPU por carácter, tú con una ventana); si no tiene ninguna carta legal
     con la que defenderse, el golpe va a su fama. */
@@ -1991,6 +2172,11 @@ async function doAttack(P, u) {
   const quick = P !== G.P;
   const pause = ms => sleep(quick ? Math.round(ms * 0.35) : ms);
   u.tapped = true;
+  // estadística: el ataque se le apunta a la carta que lo declara
+  { const ec = estCarta(u.card), el = estLado(P), e = EST();
+    if (ec) ec.atk++;
+    if (el) el.ataques++;
+    if (e) e.ataques++; }
   // primera marca: solo se sabe quién ataca; el defensor entra cuando elige
   TIRADA = { atkU: u, defU: null, fame: false, fameSide: null };
   render();
@@ -2039,9 +2225,12 @@ async function doAttack(P, u) {
   await pause(240); // un instante para leer el cruce antes de que rueden
   if (!G || G.gen !== gen) { diceTrayClose(); return; }
   const a = rollUnit(u, type, 'atk');
-  const aExtra = auraBonus(P, colorOf(u), type, 'atk') + (hasPower(u, 'COUNTDOWN') ? 3 : 0);
-  // el dado enseña el TOTAL (tirada + aura + FINAL) y ese mismo número es el que pelea
-  await showRoll(a, 'atk', quienJuega(P) + ' · ' + type, (CASA[colorOf(u)] || {}).color, aExtra, quick, trayPair('a'));
+  const aAuras = auraDetail(P, colorOf(u), type, 'atk');
+  const aFinal = hasPower(u, 'COUNTDOWN');
+  const aExtra = aAuras.length + (aFinal ? 3 : 0);
+  const aWhy = [...aAuras.map(n => n + ' +1'), ...(aFinal ? ['FINAL +3'] : [])];
+  // el dado enseña el TOTAL (tirada + bono de carta + aura + FINAL) y ese mismo número pelea
+  await showRoll(a, 'atk', quienJuega(P) + ' · ' + type, (CASA[colorOf(u)] || {}).color, aExtra, quick, trayPair('a'), aWhy);
   if (!G || G.gen !== gen) return;
   a.kept += aExtra;
   logLine('⚔ ' + u.card.name + ' ataca con ' + type + ' → ' + a.kept, P === G.P ? '' : 'bad');
@@ -2050,14 +2239,27 @@ async function doAttack(P, u) {
 
   if (def) {
     const bR = rollUnit(def, type, 'def');
-    const bExtra = auraBonus(D, colorOf(def), type, 'def');
-    await showRoll(bR, 'def', quienJuega(D) + ' · DEF ' + type, (CASA[colorOf(def)] || {}).color, bExtra, quick, trayPair('b'));
+    { const ed = estCarta(def.card), el = estLado(D);
+      if (ed) ed.defs++;
+      if (el) el.defs++; }
+    const bAuras = auraDetail(D, colorOf(def), type, 'def');
+    const bExtra = bAuras.length;
+    const bWhy = bAuras.map(n => n + ' +1');
+    await showRoll(bR, 'def', quienJuega(D) + ' · DEF ' + type, (CASA[colorOf(def)] || {}).color, bExtra, quick, trayPair('b'), bWhy);
     if (!G || G.gen !== gen) return;
     bR.kept += bExtra;
     if (a.kept >= bR.kept) {
       logLine('💥 ' + def.card.name + ' (' + bR.kept + ') cae ante ' + a.kept, D === G.O ? 'good' : 'bad');
+      // el derribo se le apunta a quien tiró el dado que contó (Idol o Mánager)
+      { const et = estCarta(estTirador(u, a)), el = estLado(P), e = EST();
+        if (et) et.kills++;
+        if (el) el.kills++;
+        if (e) e.derribos++; }
       killUnit(D, def);
     } else {
+      { const ed = estCarta(def.card), el = estLado(D);
+        if (ed) ed.defW++;
+        if (el) el.defW++; }
       logLine('🛡 ' + def.card.name + ' resiste (' + bR.kept + ' vs ' + a.kept + ')', D === G.P ? 'good' : '');
     }
   } else {
@@ -2072,9 +2274,13 @@ async function doAttack(P, u) {
       if (D.board.some(x => unitPowers(x).includes('GUARDIAN'))) { guard = 1; logLine('· AFICIÓN en escena: +1 a la fama'); }
       const rv = r.kept + guard;
       await showRoll(r, 'fame', (D === G.P && !G.spec ? 'TU FAMA' : 'FAMA DE ' + quienJuega(D).toUpperCase()) + ' · d' + faces,
-        (CASA[D.casas[0]] || {}).color, guard, quick, trayPair('b'));
+        (CASA[D.casas[0]] || {}).color, guard, quick, trayPair('b'), guard ? ['AFICIÓN +1'] : []);
       if (!G || G.gen !== gen) return;
       if (a.kept >= rv) {
+        { const ef = estCarta(estTirador(u, a)), el = estLado(P), e = EST();
+          if (ef) ef.famas++;
+          if (el) el.famas++;
+          if (e) e.famas++; }
         const card = D.lives.shift();
         D.hand.push(card);
         logLine('🩷 ¡FAMA destruida! (d' + faces + '=' + rv + ' vs ' + a.kept + ') · su carta vuelve a la mano de ' + D.name, D === G.P ? 'bad' : 'good');
@@ -2094,6 +2300,9 @@ function killUnit(P, u) {
   P.board = P.board.filter(x => x !== u);
   P.discard.push(u.card);
   if (u.mgr) P.discard.push(u.mgr);
+  { const ec = estCarta(u.card), el = estLado(P);
+    if (ec) ec.muertes++;
+    if (el) el.perdidas++; }
 }
 /** Atacar es un solo clic: se declara el tipo y el defensor decide con qué para. */
 async function doMyAttack(u) {
@@ -2121,7 +2330,8 @@ async function startTurn(P, persona) {
   P.deploysThisTurn = 0;
   for (const e of P.energy) e.ready = true;
   for (const u of P.board) u.tapped = false;
-  if (!P.deck.length) { P.deck = shuffle(P.discard); P.discard = []; if (P.human) logLine('♻ mazo vacío: se baraja tu descarte (' + P.deck.length + ')', 'hl'); }
+  { const e = EST(); if (e) e.turnos++; }
+  if (!P.deck.length) { P.deck = shuffle(P.discard); P.discard = []; { const e = EST(); if (e) e.rebarajas++; } if (P.human) logLine('♻ mazo vacío: se baraja tu descarte (' + P.deck.length + ')', 'hl'); }
   drawN(P, 2);
   if (P.human) {
     const gen = G.gen;
@@ -2155,10 +2365,38 @@ function energiaCPU(P, fichaIA) {
     if (!c) break;
     P.hand.splice(P.hand.indexOf(c), 1);
     P.energy.push({ card: c, ready: false });   // agotada: despierta el turno siguiente
+    estFans(P);
     puestas++;
   }
   if (puestas) logLine('· ' + P.name + ' coloca ' + puestas + ' fans boca abajo');
   return puestas;
+}
+/** Resumen de una mesa para las ventanas de elección: qué hay EN JUEGO, con qué
+    dado ataca y defiende cada carta y si está agotada. Al pasar el ratón por una
+    carta se ve en grande (cardNode ya trae el zoom). */
+function mesaPeek(P, titulo) {
+  const row = el('div', 'bprow');
+  const h = el('b', 'bptitle');
+  const listos = P.energy.filter(e => e.ready).length;
+  h.textContent = titulo + ' · ' + fameLeft(P) + ' de fama · ' + listos + '/' + P.energy.length + ' fans listos';
+  row.appendChild(h);
+  const cards = el('div', 'bpcards');
+  if (!P.board.length) { const z = el('span', 'bpnone'); z.textContent = 'mesa vacía'; cards.appendChild(z); }
+  for (const u of P.board) {
+    const cell = el('div', 'bpcell');
+    const n = cardNode(u.card, { cls: 'mini' + (u.tapped ? ' tap' : ''), mgr: u.mgr });
+    n.title = u.card.name + (u.mgr ? ' + ' + u.mgr.name : '') +
+      ' · ataca ' + u.card.atkType + ' ' + u.card.atk + ' · defiende ' + u.card.defType + ' ' + u.card.def +
+      (u.tapped ? ' · agotada' : '');
+    cell.appendChild(n);
+    const st = el('span', 'bpstat');
+    st.textContent = u.card.atkType + ' ' + u.card.atk + ' · ' + u.card.defType + ' ' + u.card.def;
+    cell.appendChild(st);
+    if (u.tapped) { const t = el('span', 'bpstat'); t.textContent = 'agotada'; t.style.color = 'var(--mal)'; cell.appendChild(t); }
+    cards.appendChild(cell);
+  }
+  row.appendChild(cards);
+  return row;
 }
 function placeEnergy(P) {
   return new Promise(res0 => {
@@ -2169,9 +2407,18 @@ function placeEnergy(P) {
     modalResolve = res;
     const upTo = Math.min(MAX_ENERGY_PER_TURN, MAX_ENERGY - P.energy.length);
     if (upTo <= 0 || !P.hand.length) return res();
-    const m = el('div', 'modal'), box = el('div', 'card-box');
+    const m = el('div', 'modal'), box = el('div', 'card-box centrado');   // todo centrado, no a la izquierda
     box.innerHTML = '<h3>Abre el turno</h3><p>Robas <b>2</b> cartas. Puedes colocar <b>hasta ' +
-      upTo + '</b> carta(s) de tu mano <b>boca abajo</b> como fans: entran <b>agotados</b> y se despiertan al empezar tu siguiente turno.</p>';
+      upTo + '</b> carta(s) de tu mano <b>boca abajo</b> como fans: entran <b>agotados</b> y se despiertan al empezar tu siguiente turno.<br>' +
+      'Abajo tienes <b>las dos mesas a la vista</b> (rival y tuya) para decidir sin perder de vista lo que ya está en juego; pasa el ratón por una carta para verla en grande.</p>';
+    // las dos mesas SIEMPRE a la vista en la ventana de fans: no hay que cerrar
+    // nada ni memorizar el tablero para decidir qué cartas se van boca abajo
+    if (G && G.O && G.P) {
+      const peek = el('div', 'boardpeek');
+      peek.appendChild(mesaPeek(G.O, 'SU MESA'));
+      peek.appendChild(mesaPeek(P, 'TU MESA'));
+      box.appendChild(peek);
+    }
     const pick = el('div', 'pick');
     const chosen = [];
     const btn = el('button', 'pri'); btn.textContent = 'Confirmar';
@@ -2191,7 +2438,7 @@ function placeEnergy(P) {
     btn.onclick = () => {
       const cards = chosen.map(i => P.hand[i]).filter(Boolean);
       for (const c of chosen.slice().sort((a, b) => b - a)) P.hand.splice(c, 1);
-      for (const c of cards) P.energy.push({ card: c, ready: false });
+      for (const c of cards) { P.energy.push({ card: c, ready: false }); estFans(P); }
       if (cards.length) logLine('· colocas ' + cards.length + ' fans boca abajo (agotados)');
       host.innerHTML = ''; render(); res();
     };
@@ -2445,7 +2692,7 @@ function giveStartingEnergy(P, n) {
   let k = 0;
   for (let i = 0; i < n; i++) {
     if (!P.deck.length) break;
-    P.energy.push({ card: P.deck.shift(), ready: true }); k++;
+    P.energy.push({ card: P.deck.shift(), ready: true }); estFans(P); k++;
   }
   return k;
 }
@@ -2455,8 +2702,10 @@ async function sorteoIniciativa() {
   if (!G) return;
   const gen = G.gen;
   let a = d(12), b = d(12);
-  while (a === b) { a = d(12); b = d(12); }
+  estDado([a, b], 12);   // la iniciativa también cuenta como tirada
+  while (a === b) { a = d(12); b = d(12); estDado([a, b], 12); }
   const yoEmpiezo = a > b;
+  { const e = EST(); if (e) e.inicia = yoEmpiezo ? 'P' : 'O'; }
   giveStartingEnergy(G.P, yoEmpiezo ? 1 : 2);
   giveStartingEnergy(G.O, yoEmpiezo ? 2 : 1);
   if (yoEmpiezo) drawN(G.O, 1); else drawN(G.P, 1);
@@ -2509,10 +2758,14 @@ function showRules() {
     <li>Una carta <b>agotada</b> se ve <b>girada</b> en la mesa; al empezar tu turno se endereza y las que puedes
         usar se encienden en <b>verde</b>. Pasa el ratón por cualquier carta (campo, mano o ventanas de elegir) para
         verla en grande.</li>
+    <li>En la ventana de abrir el turno —y también al elegir con qué <b>defender</b> y qué unidad sale con la
+        mesa llena— tienes <b>las dos mesas a la vista</b>: tus cartas en escena y las del rival, con su tipo, su
+        dado y si están agotadas.</li>
   </ul>
   <h4>Tipos</h4>
   <ul>
-    <li><b>IDOL</b> admite 1 <b>MANAGER</b> (acompaña: los dos tiran y se queda el mayor; valen los dos poderes).</li>
+    <li><b>IDOL</b> admite 1 <b>MANAGER</b> (acompaña: tira los dados de las dos y se queda el mayor; valen los dos
+        poderes). En la <b>mesa de dados</b> salen los <b>dos dados</b> y solo el mayor lleva la marca <b>CUENTA</b>.</li>
     <li><b>EVENTO</b> es suelto pero potente; no lleva Manager. Hasta <b>5 despliegues por turno</b> y <b>5 en mesa</b>
         (los Manager no cuentan): con la mesa llena, bajar otra te obliga a descartar una de las que ya están.</li>
   </ul>
@@ -2526,6 +2779,9 @@ function showRules() {
     <li>ATAQUE ≥ DEFENSA → la defensora se descarta con su Manager.</li>
     <li>La fama defiende con dado creciente: <b>5→d4 · 4→d6 · 3→d8 · 2→d10 · 1→d12</b>
         (+1 si el defensor tiene <b>AFICIÓN</b> en escena).</li>
+    <li>La <b>mesa de dados</b> enseña la cuenta entera: <b>caras + bono = total</b>. El <b>bono</b> (el «+N» de la
+        carta, un aura, <b>FINAL</b>, <b>AFICIÓN</b>) sale aparte, <b>grande</b> y con su nombre, para que se vea
+        por qué cae lo que cae.</li>
   </ul>
   <h4>Cerrar</h4>
   <ul><li>El turno acaba <b>tal cual</b>: no se descarta nada y no hay tope de cartas en mano. Si tu mazo se vacía,
@@ -2824,6 +3080,88 @@ function registrarPartida(win) {
   if (SESION.tipo === 'liga') ligaResultado(win);
   guardar();
 }
+/** Minutos y segundos de la partida (o lo que dure el espectáculo). */
+const estTiempo = e => {
+  const s = Math.max(0, Math.round((Date.now() - (e.t0 || Date.now())) / 1000));
+  return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+};
+const estUtil = c => c.kills * 3 + c.defW * 2 + c.famas * 4 + c.atk + c.plays;
+/** El resumen de la partida terminada: los números de los dos lados, los dados y
+    TODAS las cartas que pasaron por la mesa — la que más defendió, la que más
+    derribó, la más útil… Es lo que se enseña al acabar el combate. */
+function resumenPartidaHTML() {
+  const e = G && G.est;
+  if (!e) return '';
+  const lP = e.lado.P, lO = e.lado.O;
+  const uno = (lbl, v) => '<div class="finrow"><span>' + lbl + '</span><b>' + v + '</b></div>';
+  const dos = (lbl, a, b) => '<div class="finrow"><span>' + lbl + '</span><b>' + a + ' · ' + b + '</b></div>';
+  const d = e.dados;
+  const media = d.n ? (d.suma / d.n).toFixed(2) : '0';
+  const cartas = Object.values(e.cartas).filter(c => c.plays || c.atk || c.defs);
+  const porUtil = cartas.slice().sort((a, b) => estUtil(b) - estUtil(a));
+  const top = (fn) => cartas.slice().sort(fn)[0] || null;
+  const letal = top((a, b) => (b.kills - a.kills) || (b.atk - a.atk) || (estUtil(b) - estUtil(a)));
+  const defensora = top((a, b) => (b.defW - a.defW) || (b.defs - a.defs) || (estUtil(b) - estUtil(a)));
+  const usada = top((a, b) => (b.plays - a.plays) || (estUtil(b) - estUtil(a)));
+  const util = porUtil[0] || null;
+  const mini = (c, titulo, nums) => {
+    if (!c) return '';
+    const full = SP.db.find(x => x.key === c.key) || { key: c.key, name: c.name };
+    const node = cardNode(c, { zoom: false });
+    node.onmouseenter = () => showZoom(full);
+    const wrap = el('div', 'fincard');
+    const med = el('span', 'medal'); med.textContent = titulo;
+    const num = el('div', 'finnums'); num.innerHTML = nums;
+    wrap.appendChild(med); wrap.appendChild(node); wrap.appendChild(num);
+    return wrap.outerHTML;
+  };
+  let h = '<div class="finbox">';
+  h += '<div class="fingrid">';
+  h += '<div class="fincol"><h5>La partida</h5>' +
+    uno('Turnos', e.turnos) + uno('Duración', estTiempo(e)) +
+    uno('Ataques lanzados', e.ataques) + uno('Unidades derribadas', e.derribos) +
+    uno('Fama tumbada', e.famas) +
+    uno('Fans gastados', lP.gastados + lO.gastados) +
+    uno('Rebarajas de mazo', e.rebarajas) +
+    uno('Empezó', e.inicia === 'P' ? quienJuega(G.P) : e.inicia === 'O' ? quienJuega(G.O) : '—') + '</div>';
+  h += '<div class="fincol"><h5>' + quienJuega(G.P).toUpperCase() + ' · ' + quienJuega(G.O).toUpperCase() + '</h5>' +
+    dos('Despliegues', lP.plays, lO.plays) + dos('Fans bajados', lP.fans, lO.fans) +
+    dos('Ataques', lP.ataques, lO.ataques) + dos('Derribos', lP.kills, lO.kills) +
+    dos('Defensas (intentos)', lP.defs, lO.defs) + dos('Defensas aguantadas', lP.defW, lO.defW) +
+    dos('Fama tumbada', lP.famas, lO.famas) + dos('Bajas sufridas', lP.perdidas, lO.perdidas) +
+    dos('Fama final', fameLeft(G.P), fameLeft(G.O)) +
+    dos('Cartas en mesa', G.P.board.length, G.O.board.length) +
+    dos('Cartas en mano', G.P.hand.length, G.O.hand.length) +
+    dos('Mazo / descarte', G.P.deck.length + ' / ' + G.P.discard.length, G.O.deck.length + ' / ' + G.O.discard.length) +
+    '</div>';
+  h += '<div class="fincol"><h5>Dados</h5>' +
+    uno('Tiradas', d.n) + uno('Media', media) + uno('Mayor', d.mayor) +
+    uno('Unos', d.unos) + uno('Críticos (cara máxima)', d.criticos) + '</div>';
+  h += '</div>';
+  const nums = (c) => 'bajada ×' + c.plays + ' · ataca ×' + c.atk + '<br>derriba ×' + c.kills +
+    ' · defiende ×' + c.defW + '/' + c.defs + '<br>fama ×' + c.famas + ' · cae ×' + c.muertes + ' · útil ' + estUtil(c);
+  h += '<h4 style="margin:6px 0 0">Las cartas de la partida</h4>';
+  h += '<div class="fintop">' +
+    mini(util, '🏆 La más útil', nums(util || {})) +
+    mini(letal, '⚔ La que más derribó', nums(letal || {})) +
+    mini(defensora, '🛡 La que más defendió', nums(defensora || {})) +
+    mini(usada, '🔁 La más usada', nums(usada || {})) + '</div>';
+  if (porUtil.length) {
+    const mis = c => G.P.casas.includes(c.casa) && !G.O.casas.includes(c.casa);
+    h += '<div class="finlista"><table><thead><tr><th>Carta</th><th>Quién</th><th>Bajada</th><th>Ataca</th>' +
+      '<th>Derriba</th><th>Defiende</th><th>Aguanta</th><th>Fama</th><th>Cae</th><th>Útil</th></tr></thead><tbody>' +
+      porUtil.map(c => '<tr class="' + (mis(c) ? 'mio' : '') + '"><td><img class="thumb" src="' + img(c.key) + '" alt="">' +
+        c.name.replace(/"/g, '') + '</td><td>' + (mis(c) ? 'TÚ' : 'RIVAL') + '</td>' +
+        '<td class="n">' + c.plays + '</td><td class="n">' + c.atk + '</td><td class="n">' + c.kills + '</td>' +
+        '<td class="n">' + c.defs + '</td><td class="n">' + c.defW + '</td><td class="n">' + c.famas + '</td>' +
+        '<td class="n">' + c.muertes + '</td><td class="n">' + estUtil(c) + '</td></tr>').join('') +
+      '</tbody></table></div>';
+  }
+  h += '<div class="finnote">Utilidad = derribos ×3 + defensas aguantadas ×2 + fama ×4 + ataques + despliegues. ' +
+    'Las defensas «aguantadas» son las que resistieron; «intentos» incluye las que cayeron.</div>';
+  h += '</div>';
+  return h;
+}
 function mostrarFinPartida(win) {
   const host = $('#modalHost');
   const m = el('div', 'modal'), box = el('div', 'card-box');
@@ -2832,7 +3170,8 @@ function mostrarFinPartida(win) {
   box.innerHTML = '<h3>' + (win ? '¡Victoria!' : 'Derrota') + '</h3>' +
     '<p>' + (win ? 'Dejas a ' + G.rival.nombre + ' sin fama.' : G.rival.nombre + ' se lleva la partida.') +
     ' <b>' + delta + '</b> · ELO ' + SAVE.elo + '.</p>' +
-    '<p class="lead" style="margin:0">' + (SESION.etiqueta || (SESION.tipo === 'amistoso' ? 'Amistoso' : SESION.tipo)) + '</p>';
+    '<p class="lead" style="margin:0">' + (SESION.etiqueta || (SESION.tipo === 'amistoso' ? 'Amistoso' : SESION.tipo)) + '</p>' +
+    resumenPartidaHTML();   // todas las estadísticas de la partida
   const row = el('div', 'row'); row.style.marginTop = '16px';
   const cont = el('button', 'pri'); cont.textContent = SESION.tipo === 'amistoso' ? 'Ver menú' : 'Continuar';
   cont.onclick = () => { host.innerHTML = ''; G = null; go(SESION.tipo === 'amistoso' ? 'menu' : SESION.tipo === 'champ' ? 'champ' : 'league'); };
@@ -3358,12 +3697,13 @@ const TUT = [
     list: ['Al abrir tu turno: <b>robas 2</b> y colocas <b>hasta 2</b> cartas de tu mano <b>boca abajo</b> como fans (entran agotados).',
       'Máximo <b>5 fans</b> en mesa. Al empezar tu turno todas se despiertan; lo que no gastes se queda para luego.',
       '<b>Coste</b>: giras tantos fans preparados como pida la carta. <b>Sacrificio</b> (2/3): 2 de esas ya agotadas se van al descarte.',
-      'Los fans siguen boca abajo en la mesa: el rival ve cuántas tienes, nunca cuáles son. Solo el sacrificio las manda al descarte.'],
+      'Los fans siguen boca abajo en la mesa: el rival ve cuántas tienes, nunca cuáles son. Solo el sacrificio las manda al descarte.',
+      'En esa ventana (y al elegir con qué defender o qué unidad sale) tienes <b>las dos mesas a la vista</b>, con su tipo, su dado y si están agotadas.'],
     cards: [] },
   { t: 'Desplegar: IDOL, MANAGER y EVENTO',
     x: 'Bajas cartas de la mano pagando su coste. Entran <b>giradas</b>: no atacan hasta el turno siguiente (salvo IMPULSO).',
     list: ['En mesa se ven <b>tumbadas</b> (giradas) mientras están agotadas; al empezar tu turno se enderezan, y las que puedes usar se encienden en <b>verde</b>.',
-      '<b>IDOL</b>: la cantante. Admite <b>1 Manager</b> montado; tira los dados de las dos y se queda el mayor.',
+      '<b>IDOL</b>: la cantante. Admite <b>1 Manager</b> montado; tira los dados de las dos y se queda el mayor (en la mesa de dados se ven <b>los dos</b> y cuál cuenta).',
       '<b>MANAGER</b>: no baja solo. Elige una Idol tuya sin Manager: la acompaña (y no ocupa hueco en mesa).',
       '<b>EVENTO</b>: suelto y potente, siempre con una Idol en escena. No lleva Manager.',
       'Hasta <b>5 despliegues por turno</b> y <b>5 cartas en escena</b> (Idol + Evento); los Manager no cuentan.',
@@ -3749,7 +4089,8 @@ function specFinal(botGana) {
   box.innerHTML = '<h3>👀 Fin del duelo</h3><p>Gana <b>' + gana.nombre + '</b> a ' + pierde.nombre +
     ' · <b>+' + dp + ' ELO</b> para el ganador.</p>' +
     '<p class="lead" style="margin:0">Es un duelo entre CPUs: tu ELO y tu récord no se mueven. ' +
-    'El resultado sí queda en la tabla de las CPU.</p>';
+    'El resultado sí queda en la tabla de las CPU.</p>' +
+    resumenPartidaHTML();   // el duelo mirado también deja sus estadísticas
   const row = el('div', 'row'); row.style.marginTop = '14px';
   const rev = el('button', 'pri'); rev.textContent = 'Revancha';
   rev.onclick = () => { host.innerHTML = ''; iniciarEspectaculo(topId, botId); };
